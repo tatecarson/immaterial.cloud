@@ -20671,10 +20671,21 @@ async function getData(url) {
   });
 }
 
+function startContext() {
+  console.log('Tone is: ', _tone.default.context.state);
+  document.getElementById('context').addEventListener('click', () => {
+    _tone.default.context.resume();
+
+    console.log('Tone is: ', _tone.default.context.state);
+  });
+}
+
+startContext();
+
 async function init() {
   // const audioContext = p5.prototype.getAudioContext()
-  const tone = new _tone.default();
-  const audioContext = tone.context; // new Tone.Context().rawContext
+  // const tone = new Tone()
+  const audioContext = new _tone.default.Context().rawContext; // new Tone.Context().rawContext
   // otherData = await getData('bowedWav.wav')
 
   const data = await getData('example.wav'); // TODO: add some total-serialism
@@ -20710,7 +20721,7 @@ async function init() {
     }
 
     makePart(grain) {
-      // TODO: replace this with p5.part 
+      // TODO: replace this with p5.part
       // https://p5js.org/reference/#/p5.Part
       this.events = _rhythmical.Rhythm.render(this.notes, this.cycle);
       return new _tone.default.Part({
@@ -20733,6 +20744,15 @@ async function init() {
   console.log(grain);
   await instrument.setGrain(data);
   instrument.makePart(grain);
+  const resume = document.getElementById('resume');
+  resume.addEventListener('click', () => {
+    const id = grain.startVoice({
+      position: 0.1,
+      gain: 0.5
+    });
+
+    _tone.default.Transport.start();
+  });
 }
 
 init();
@@ -20764,7 +20784,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "57590" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "57755" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

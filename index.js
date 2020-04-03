@@ -35,8 +35,8 @@ startContext()
 
 async function init () {
   // const audioContext = p5.prototype.getAudioContext()
-  const tone = new Tone()
-  const audioContext = tone.context
+  // const tone = new Tone()
+  const audioContext = new Tone.Context().rawContext
   // new Tone.Context().rawContext
   // otherData = await getData('bowedWav.wav')
   const data = await getData('example.wav')
@@ -101,5 +101,16 @@ async function init () {
   await instrument.setGrain(data)
 
   instrument.makePart(grain)
+
+  const resume = document.getElementById('resume');
+
+  resume.addEventListener('click', () => {
+    const id = grain.startVoice({
+      position: 0.1,
+      gain: 0.5
+    });
+
+   Tone.Transport.start()
+  })
 }
 init()
