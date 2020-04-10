@@ -20,11 +20,8 @@
   },
   "dependencies": {
     "granular-js": "^0.6.0",
-    "p5": "^0.7.2",
+    "p5": "^0.9.0",
     "rhythmical": "^0.1.6",
-    "simplex-noise": "^2.4.0",
-    "startaudiocontext": "^1.2.1",
-    "tone": "^13.8.25",
-    "unmute": "^0.1.3"
+    "simplex-noise": "^2.4.0"
   }
 }
