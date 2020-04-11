@@ -11,6 +11,7 @@ export default class Grains {
     let blended
     let sourceData
     let blendedData
+    const movementIsRunning = false
 
     const s = (sketch) => {
       sketch.setup = function () {
@@ -41,36 +42,30 @@ export default class Grains {
           }, 200)
         })
 
-        capture = sketch.createCapture(sketch.VIDEO)
-        capture.size(sketch.displayWidth, sketch.displayHeight)
-        capture.hide()
-
-        sourceData = sketch.createImage(sketch.width, sketch.height)
-        prevFrame = sketch.createImage(sketch.width, sketch.height)
-        blended = sketch.createImage(sketch.width, sketch.height)
-        blendedData = sketch.createImage(sketch.width, sketch.height)
-        sourceData.loadPixels()
-        blended.loadPixels()
-        prevFrame.loadPixels()
-
-        sketch.frameRate(15)
+        if (movementIsRunning) {
+          capture = sketch.createCapture(sketch.VIDEO)
+          capture.size(sketch.displayWidth, sketch.displayHeight)
+          capture.hide()
+  
+          sourceData = sketch.createImage(sketch.width, sketch.height)
+          prevFrame = sketch.createImage(sketch.width, sketch.height)
+          blended = sketch.createImage(sketch.width, sketch.height)
+          blendedData = sketch.createImage(sketch.width, sketch.height)
+          sourceData.loadPixels()
+          blended.loadPixels()
+          prevFrame.loadPixels()
+  
+          sketch.frameRate(15)
+        }
       }
 
       sketch.draw = function () {
         sketch.clear()
 
-        // grains.forEach(grain => {
-        //   const { x, y } = grain;
-
-        //   grain.x += 2;
-
-        //   sketch.rect(x, y, 48, 16, 8);
-        // });
-
-        // sketch.ellipse(sketch.mouseX, sketch.mouseY, 16, 16)
-
-        getMovement(capture, sourceData, prevFrame, blended)
-        checkAreas(blendedData, blended)
+        if (movementIsRunning) {
+          getMovement(capture, sourceData, prevFrame, blended)
+          checkAreas(blendedData, blended)
+        }
       }
 
       sketch.mousePressed = function () {
@@ -129,7 +124,6 @@ export default class Grains {
           }
           
           // calculate an average between of the color values of the note area
-          // TODO: make this take up whole screen
           average = Math.round(average / (blendedData.pixels.length * 0.25))
           if (average > 10 && !isSeen) {
             isSeen = true

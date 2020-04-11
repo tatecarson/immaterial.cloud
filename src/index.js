@@ -10,13 +10,12 @@ import DragAndDrop from './DragAndDrop'
 import AutoPlay from './AutoPlay'
 
 // TODO: explore around
-// TODO: add camera recognition from vida 
 // TODO: add peerjs chatroom capabilities to this 
 
 const PRESETS = [
   {
     name: 1,
-    url: 'samples/D135BPM1.wav'
+    url: 'samples/ringTones.wav'
   },
   {
     name: '2',
@@ -70,7 +69,6 @@ async function loadUserData (data) {
 
 async function loadPreset ({ name, url }) {
   if (process.ENV === 'development') {
-    console.log(`load preset ${name}`)
   }
 
   autoPlay.stop()
@@ -85,9 +83,7 @@ async function loadPreset ({ name, url }) {
 
 
   data = await getData(url)
-  console.log('loadPreset -> url', url)
   const audioBuffer = await granular.setBuffer(data)
-  console.log('loadPreset -> audioBuffer', audioBuffer)
 
   AUDIO_BUFFER_CACHE[name] = audioBuffer
 
@@ -99,7 +95,6 @@ async function loadPreset ({ name, url }) {
 function createPresets (data, text) {
   PRESETS.forEach((preset) => {
     const { name } = preset
-    console.log('createPresets -> preset', preset)
 
     const button = document.createElement('div')
 
@@ -132,7 +127,7 @@ async function init () {
   granular = new Granular({
     audioContext,
     envelope: {
-      attack: 0,
+      attack: 0.2,
       decay: 0.5
     },
     density: 0.8,
@@ -142,15 +137,13 @@ async function init () {
 
   const delay = new p5.Delay()
 
-  delay.process(granular, 0.5, 0.5, 3000) // source, delayTime, feedback, filter frequency
+  delay.process(granular, 0, 0.5, 3000) // source, delayTime, feedback, filter frequency
 
   const reverb = new p5.Reverb()
 
-  // due to a bug setting parameters will throw error
-  // https://github.com/processing/p5.js/issues/3090
   reverb.process(delay) // source, reverbTime, decayRate in %, reverse
 
-  reverb.amp(3)
+  reverb.amp(0)
 
   const compressor = new p5.Compressor()
 
