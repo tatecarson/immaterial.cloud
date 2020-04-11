@@ -113,6 +113,7 @@ export default class Grains {
       function checkAreas (blendedData, blended) {
         // loop over the note areas
         const num = 8
+        let isSeen = false;
         for (var r = 0; r < num; ++r) {
           blendedData.copy(blended, 0, 0, sketch.width, sketch.height, 1 / num * r * sketch.width, 0, sketch.width / num, sketch.height)
 
@@ -130,7 +131,8 @@ export default class Grains {
           // calculate an average between of the color values of the note area
           // TODO: make this take up whole screen
           average = Math.round(average / (blendedData.pixels.length * 0.25))
-          if (average > 10) {
+          if (average > 10 && !isSeen) {
+            isSeen = true
             sketch.fill(255, 0, 0)
             sketch.rect(1 / num * r * sketch.width, 0, sketch.width / num, sketch.height)
             console.log('area:', r, 'average: ', average)
@@ -140,6 +142,9 @@ export default class Grains {
               volume: 0.5
             })
           } else {
+            if (isSeen) {
+              isSeen = false
+            }
             granular.stopVoice(ID)
           }
         }
