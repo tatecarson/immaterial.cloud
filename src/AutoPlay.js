@@ -1,4 +1,8 @@
 import SimplexNoise from 'simplex-noise'
+import Srl from 'total-serialism/build/ts.es5.min.js'
+import Nexus from 'nexusui'
+const Mod = Srl.Transform
+const Rand = Srl.Stochastic
 
 const simplex = new SimplexNoise(Math.random)
 
@@ -24,8 +28,9 @@ export default class AutoPlay {
 
     this.running = true
 
-    let x = simplex.noise2D(performance.now() / 10000, 0),
-      y = simplex.noise2D(performance.now() / 10000 + 1000, 0)
+    let x = simplex.noise2D(performance.now() / 10000, 0)
+    const palindrome = new Nexus.Sequence(Mod.palindrome([0, 7, 12, 3]))
+    const dice = new Nexus.Sequence(Rand.dice(10))
 
     granular.set({
       pitch: 1
@@ -39,21 +44,21 @@ export default class AutoPlay {
 
     const run = () => {
       x = simplex.noise2D(performance.now() / 10000, 0)
-      y = simplex.noise2D(performance.now() / 10000 + 1000, 0)
-
+      
       granular.set({
-        pitch: map(x, -1, 1, 1, 6),
-        density: map(x, -1, 1, 0, 1), 
+        
+        // pitch: dice.next(),
+        density: map(palindrome.next(), 0, 12, 0, 1), 
         // density: 1,
         envelope: {
-          attack: map(x, -1, 1, 0, 0.5),
-          release: 0.01
+          // attack: map(x, -1, 1, 0, 0.5),
+          // attack: 0.1,
+          release: 0.1
         }
       })
-
-      // console.log(granular.state.envelope.attack)
+      
       granular.updateVoice(ID, {
-        position: map(x, -1, 1, 0, 1),
+        position: map(palindrome.next(), 0, 12, 0, 1),
         volume: 0.5
       })
 
@@ -75,3 +80,4 @@ export default class AutoPlay {
 function map (value, inMin, inMax, outMin, outMax) {
   return (value - inMin) * (outMax - outMin) / (inMax - inMin) + outMin
 }
+
