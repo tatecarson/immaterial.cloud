@@ -1,5 +1,4 @@
-import * as dat from 'dat.gui'
-import preset from './presets'
+import { settings } from './presets'
 import SimplexNoise from 'simplex-noise'
 import Srl from 'total-serialism/build/ts.es5.min.js'
 import Nexus from 'nexusui'
@@ -11,46 +10,6 @@ const simplex = new SimplexNoise(Math.random)
 
 const ID = 'autoPlay'
 
-const gui = new dat.GUI({
-  load: {
-    'preset': 'deeper',
-    'remembered': {
-      'Default': {
-        '0': {}
-      },
-      'preset1': {
-        '0': {
-          'pitch': 5.331566469093988,
-          'attack': 0.8720000000000002,
-          'release': 1.320000000000001,
-          'density': 0.6591024555461473
-        }
-      },
-      'deeper': {
-        '0': {
-          'pitch': 0.7274682472480949,
-          'attack': 0.05199999999999981,
-          'release': 1.320000000000001,
-          'density': 0.10635055038103303
-        }
-      }
-    },
-    'closed': false,
-    'folders': {}
-  }})
-
-const settings = {
-  attack: 0.1,
-  release: 0.1,
-  pitch: 1,
-  density: 1
-}
-gui.add(settings, 'pitch', 0.1, 6)
-gui.add(settings, 'attack')
-gui.add(settings, 'release')
-gui.add(settings, 'density', 0, 1)
-
-gui.remember(settings)
 export default class AutoPlay {
   constructor (granular) {
     this.granular = granular
@@ -63,6 +22,7 @@ export default class AutoPlay {
   }
 
   start () {
+    // pitchController.setValue(10)
     if (this.running) {
       return
     }
