@@ -1,5 +1,5 @@
 Arguments: 
-  /usr/local/bin/node /Users/tatecarson/.yarn/bin/yarn.js add p5.vida.min.js
+  /usr/local/bin/node /Users/tatecarson/.yarn/bin/yarn.js add preset.json
 
 PATH: 
   /usr/local/lib/node_modules/npm/node_modules/npm-lifecycle/node-gyp-bin:/Users/tatecarson/webDev/vibration-music/granular/node_modules/.bin:/Users/tatecarson/.cargo/bin:/Users/tatecarson/.yarn/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/X11/bin:/usr/local/go/bin:/Library/Frameworks/Mono.framework/Versions/Current/Commands:/Library/TeX/texbin:/Users/tatecarson/.cargo/bin:/Applications/google-cloud-sdk/bin
@@ -14,7 +14,7 @@ Platform:
   darwin x64
 
 Trace: 
-  Error: https://registry.npmjs.org/p5.vida.min.js: Not found
+  Error: https://registry.npmjs.org/preset.json: Not found
       at Request.params.callback [as _callback] (/Users/tatecarson/.yarn/lib/cli.js:66947:18)
       at Request.self.callback (/Users/tatecarson/.yarn/lib/cli.js:140665:22)
       at Request.emit (events.js:182:13)
@@ -33,7 +33,7 @@ npm manifest:
     "description": "Granular synthesis library example",
     "main": "index.js",
     "scripts": {
-      "start": "parcel src/index.html --no-source-maps --open"
+      "start": "parcel src/index.html --no-source-maps --no-cache"
     },
     "browserslist": [
       "last 1 Chrome version",
@@ -48,13 +48,12 @@ npm manifest:
       "parcel-bundler": "^1.10.3"
     },
     "dependencies": {
+      "dat.gui": "^0.7.7",
       "granular-js": "^0.6.0",
-      "p5": "^0.7.2",
-      "rhythmical": "^0.1.6",
+      "nexusui": "^2.0.16",
+      "p5": "^0.9.0",
       "simplex-noise": "^2.4.0",
-      "startaudiocontext": "^1.2.1",
-      "tone": "^13.8.25",
-      "unmute": "^0.1.3"
+      "total-serialism": "^1.6.9"
     }
   }
 
@@ -3590,10 +3589,10 @@ Lockfile:
     resolved "https://registry.yarnpkg.com/p-try/-/p-try-2.2.0.tgz#cb2868540e313d61de58fafbe35ce9004d5540e6"
     integrity sha512-R4nPAVTAU0B9D35/Gk3uJf/7XYbQcyohSKdvAxIRSNghFl4e71hVoGnBNQz9cWaXxO2I10KTC+3jMdvvoKw6dQ==
   
-  p5@^0.7.2:
-    version "0.7.3"
-    resolved "https://registry.yarnpkg.com/p5/-/p5-0.7.3.tgz#a0660327feb8da3e43359a16ad62566b96a7cabe"
-    integrity sha512-Ap0Op/YlbqlBe9BEkpislygOKcID9+i6lbGHcUY/QkgZl21+Jy0GPpw+bLjgURk/wlloLcXGnUDpuGsP0xsx2Q==
+  p5@^0.9.0:
+    version "0.9.0"
+    resolved "https://registry.yarnpkg.com/p5/-/p5-0.9.0.tgz#a4431bf2a0ff6ede06e2c512faddb495c3332504"
+    integrity sha512-N8FzKr9SKofl4f+d9g6oYDRk5JOYgY1bIhCInzNxW7khc1zk7whQIOhaHeijSslfN3rJYfWso6Fn3O/w+TCwLg==
   
   pako@^0.2.5:
     version "0.2.9"
@@ -4721,11 +4720,6 @@ Lockfile:
     resolved "https://registry.yarnpkg.com/stable/-/stable-0.1.8.tgz#836eb3c8382fe2936feaf544631017ce7d47a3cf"
     integrity sha512-ji9qxRnOVfcuLDySj9qzhGSEFVobyt1kIOSkj1qZzYLzq7Tos/oUUWvotUPQLlrsidqsK6tBH89Bc9kL5zHA6w==
   
-  startaudiocontext@^1.2.1:
-    version "1.2.1"
-    resolved "https://registry.yarnpkg.com/startaudiocontext/-/startaudiocontext-1.2.1.tgz#46d2cab5462c791180acc7223e3bbbc3272c8595"
-    integrity sha1-RtLKtUYseRGArMciPju7wycshZU=
-  
   static-eval@^2.0.0:
     version "2.0.5"
     resolved "https://registry.yarnpkg.com/static-eval/-/static-eval-2.0.5.tgz#f0782e66999c4b3651cda99d9ce59c507d188f71"
@@ -5015,11 +5009,6 @@ Lockfile:
     resolved "https://registry.yarnpkg.com/toidentifier/-/toidentifier-1.0.0.tgz#7e1be3470f1e77948bc43d94a3c8f4d7752ba553"
     integrity sha512-yaOH/Pk/VEhBWWTlhI+qXxDFXlejDGcQipMlyxda9nthulaxLZUNcUqFxokp0vcYnvteJln5FNQDRrxj3YcbVw==
   
-  tone@^13.8.25:
-    version "13.8.25"
-    resolved "https://registry.yarnpkg.com/tone/-/tone-13.8.25.tgz#057eefb39d4c749524db0ca210e34303cdc3c025"
-    integrity sha512-8QqmLn+/R+Urib/78zf93+NqFLddXS777kQO7+EbJHwqy+nmug+SJFRp2KIytT0LQY2sJBiopNb2ceHA8uQQJg==
-  
   tough-cookie@^2.3.3, tough-cookie@^2.5.0, tough-cookie@~2.5.0:
     version "2.5.0"
     resolved "https://registry.yarnpkg.com/tough-cookie/-/tough-cookie-2.5.0.tgz#cd9fb2a0aa1d5a12b473bd9fb96fa3dcff65ade2"
@@ -5129,11 +5118,6 @@ Lockfile:
     version "2.0.0"
     resolved "https://registry.yarnpkg.com/uniqs/-/uniqs-2.0.0.tgz#ffede4b36b25290696e6e165d4a59edb998e6b02"
     integrity sha1-/+3ks2slKQaW5uFl1KWe25mOawI=
-  
-  unmute@^0.1.3:
-    version "0.1.3"
-    resolved "https://registry.yarnpkg.com/unmute/-/unmute-0.1.3.tgz#aba3b19e9e612350647830249a61395959a3af94"
-    integrity sha512-cx9h46cL3dlrxaLzNPCW1FrmyO/hvl3p9vRfjij3yf/fYfUIdHFdE+kezWpEZ8X+CWGVjBCiOS+9xKiYnUsxXw==
   
   unquote@~1.1.1:
     version "1.1.1"
