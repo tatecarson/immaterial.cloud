@@ -1,6 +1,8 @@
 import p5 from 'p5'
 import 'p5/lib/addons/p5.dom'
 import { differenceAccuracy } from './MotionDetection'
+import { map } from './utils'
+
 const ID = 'grains'
 
 export default class Grains {
@@ -108,7 +110,7 @@ export default class Grains {
       function checkAreas (blendedData, blended) {
         // loop over the note areas
         const num = 8
-        let isSeen = false;
+        let isSeen = false
         for (var r = 0; r < num; ++r) {
           blendedData.copy(blended, 0, 0, sketch.width, sketch.height, 1 / num * r * sketch.width, 0, sketch.width / num, sketch.height)
 
@@ -147,8 +149,4 @@ export default class Grains {
 
     new p5(s)
   }
-}
-
-function map (value, inMin, inMax, outMin, outMax) {
-  return (value - inMin) * (outMax - outMin) / (inMax - inMin) + outMin
 }

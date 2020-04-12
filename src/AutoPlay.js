@@ -1,7 +1,9 @@
-import { settings } from './presets'
 import SimplexNoise from 'simplex-noise'
 import Srl from 'total-serialism/build/ts.es5.min.js'
 import Nexus from 'nexusui'
+
+import { settings, interpolatePresets } from './presets'
+import { map } from './utils'
 
 const Mod = Srl.Transform
 const Rand = Srl.Stochastic
@@ -34,6 +36,7 @@ export default class AutoPlay {
     let x = simplex.noise2D(performance.now() / 10000, 0)
     const palindrome = new Nexus.Sequence(Mod.palindrome([0, 7, 12, 3]))
     const dice = new Nexus.Sequence(Rand.dice(10))
+    let deeper = interpolatePresets(1000).pitch
 
     granular.set({
       pitch: 1
@@ -51,7 +54,8 @@ export default class AutoPlay {
       granular.set({
 
         // pitch: dice.next(),
-        pitch: settings.pitch,
+        // pitch: settings.pitch,
+        pitch: deeper.next(), //interpolating between presets 
         // density: map(palindrome.next(), 0, 12, 0, 1),
         density: settings.density,
         envelope: {
@@ -74,13 +78,13 @@ export default class AutoPlay {
     run()
   }
 
+  interpolate() {
+    // TODO: write the interpolation stuff here 
+  }
+
   stop () {
     this.granular.stopVoice(ID)
 
     this.running = false
   }
-}
-
-function map (value, inMin, inMax, outMin, outMax) {
-  return (value - inMin) * (outMax - outMin) / (inMax - inMin) + outMin
 }
