@@ -184,12 +184,12 @@ async function init () {
     // space
     if (event.keyCode === 32) {
       if (autoPlay.isRunning()) {
-        autoPlay.stop()
+        // autoPlay.stop()
 
         pillPlay.textContent = 'Play'
       } else {
-        autoPlay.start()
-
+        // autoPlay.start()
+        autoPlay.interpolate()
         pillPlay.textContent = 'Stop'
       }
     }

@@ -36,7 +36,6 @@ export default class AutoPlay {
     let x = simplex.noise2D(performance.now() / 10000, 0)
     const palindrome = new Nexus.Sequence(Mod.palindrome([0, 7, 12, 3]))
     const dice = new Nexus.Sequence(Rand.dice(10))
-    let deeper = interpolatePresets(1000).pitch
 
     granular.set({
       pitch: 1
@@ -49,13 +48,25 @@ export default class AutoPlay {
     })
 
     const run = () => {
-      x = simplex.noise2D(performance.now() / 10000, 0)
+      // TODO: remake the interp method here
+      // if (interp) {
+      //   // run the interp settings
+      //   const interpolate = interpolatePresets('deeper', 'sparse', 10)
+      //   console.log(interpolate.pitch)
+      // granular.set({
+      //   pitch: interpolate.pitch.next(), //interpolating between presets
+      //   density: interpolate.density.next(),
+
+      // })
+      // } else {
+      //   // run the normal settings from dat.gui
+      // }
 
       granular.set({
 
         // pitch: dice.next(),
-        // pitch: settings.pitch,
-        pitch: deeper.next(), //interpolating between presets 
+        pitch: settings.pitch,
+        // pitch: deeper.next(), //interpolating between presets
         // density: map(palindrome.next(), 0, 12, 0, 1),
         density: settings.density,
         envelope: {
@@ -78,9 +89,31 @@ export default class AutoPlay {
     run()
   }
 
-  interpolate() {
-    // TODO: write the interpolation stuff here 
-  }
+  // interpolate () {
+  //   if (this.running) {
+  //     return
+  //   }
+
+  //   const { granular } = this
+
+  //   this.running = true
+
+  //   const interpolate = interpolatePresets('deeper', 'sparse', 10)
+  //   console.log(interpolate.pitch)
+
+  //   const run = () => {
+  //     granular.set({
+  //       pitch: interpolate.pitch.next(),
+  //       density: interpolate.density.next()
+  //     })
+
+  //     if (this.running) {
+  //       setTimeout(run)
+  //     }
+  //   }
+
+  //   run()
+  // }
 
   stop () {
     this.granular.stopVoice(ID)
