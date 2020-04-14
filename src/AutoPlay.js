@@ -1,7 +1,15 @@
 import SimplexNoise from 'simplex-noise'
 import Srl from 'total-serialism/build/ts.es5.min.js'
 import Nexus from 'nexusui'
-import { settings, interpolatePresets, pitchController } from './presets'
+
+import {
+  settings,
+  interpolatePresets,
+  pitchController,
+  densityController,
+  attackController,
+  releaseController
+} from './presets'
 import { map } from './utils'
 
 const Mod = Srl.Transform
@@ -34,24 +42,24 @@ export default class AutoPlay {
     const palindrome = new Nexus.Sequence(Mod.palindrome([0, 7, 12, 3, 4, 2, 11]))
     // const dice = new Nexus.Sequence(Rand.dice(10))
 
-    granular.set({
-      pitch: pitchController.getValue()
-    })
-
     granular.startVoice({
       id: ID,
       position: map(x, -1, 1, 0, 1),
       volume: 0.5
     })
-
-    let interpolate = interpolatePresets(settings.endPreset, 2000)
-
-    // FIXME: when stopping it jumps values instead of continuing from the previous position
+    
+    let interpolate = interpolatePresets({
+      density: granular.state.density,
+      pitch: granular.state.pitch,
+      attack: granular.state.envelope.attack,
+      release: granular.state.envelope.release
+    }, settings.endPreset, 3000)
+        
     // TODO: then add networking to phones
     // TODO: interaction #3 - presets
     const run = () => {
       let mode = settings.mode
-      
+
       if (mode === 'interpolate') {
         // run the interpolate settings
         if (interpolate.pitch.position !== interpolate.pitch.values.length - 1) {
