@@ -57,7 +57,11 @@ export default class AutoPlay {
         if (interpolate.pitch.position !== interpolate.pitch.values.length - 1) {
           granular.set({
             pitch: interpolate.pitch.next(), // interpolating between presets
-            density: interpolate.density.next()
+            density: interpolate.density.next(), 
+            envelope: {
+              attack: interpolate.attack.next(),
+              release: interpolate.release.next()
+            }
           })
         }
       } else if (mode === 'preset') {

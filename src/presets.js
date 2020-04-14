@@ -44,22 +44,29 @@ export const settings = {
 }
 
 export const pitchController = gui.add(settings, 'pitch', 0.1, 6)
-gui.add(settings, 'attack')
-gui.add(settings, 'release')
+export const attackController = gui.add(settings, 'attack')
+export const releaseController = gui.add(settings, 'release')
 export const densityController = gui.add(settings, 'density', 0, 1)
 gui.remember(settings)
 
 const presets = gui.load.remembered
 
+// interpolate from current position to the endPreset over n steps
 export function interpolatePresets (endPreset, steps) {
   let preset = {}
   let end = presets[endPreset][0]
 
   Object.keys(end).forEach((setting, i) => {
+  console.log("interpolatePresets -> setting", setting)
+    
     if (setting === 'pitch') {
       preset.pitch = new Nexus.Sequence(spreadInclusiveFloat(steps, pitchController.getValue(), end[setting]))
     } else if (setting === 'density') {
       preset.density = new Nexus.Sequence(spreadInclusiveFloat(steps, densityController.getValue(), end[setting]))
+    } else if (setting === 'attack') {
+      preset.attack = new Nexus.Sequence(spreadInclusiveFloat(steps, attackController.getValue(), end[setting]))
+    } else if (setting === 'release') {
+      preset.release = new Nexus.Sequence(spreadInclusiveFloat(steps, releaseController.getValue(), end[setting]))
     }
   })
   
