@@ -4,11 +4,7 @@ import Nexus from 'nexusui'
 
 import {
   settings,
-  interpolatePresets,
-  pitchController,
-  densityController,
-  attackController,
-  releaseController
+  interpolatePresets
 } from './presets'
 import { map } from './utils'
 

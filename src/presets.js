@@ -56,8 +56,8 @@ export const settings = {
 }
 
 export const pitchController = gui.add(settings, 'pitch', 0.1, 6)
-export const attackController = gui.add(settings, 'attack')
-export const releaseController = gui.add(settings, 'release')
+export const attackController = gui.add(settings, 'attack', 0.001, 2)
+export const releaseController = gui.add(settings, 'release', 0.001, 2)
 export const densityController = gui.add(settings, 'density', 0, 1)
 gui.add(settings, 'mode', ['interpolate', 'preset'])
 gui.add(settings, 'endPreset')
