@@ -1,12 +1,10 @@
 import SimplexNoise from 'simplex-noise'
 import Srl from 'total-serialism/build/ts.es5.min.js'
 import Nexus from 'nexusui'
-import gui from 'dat.gui'
 import { settings, interpolatePresets, pitchController } from './presets'
 import { map } from './utils'
 
 const Mod = Srl.Transform
-const Rand = Srl.Stochastic
 
 const simplex = new SimplexNoise(Math.random)
 
@@ -24,7 +22,6 @@ export default class AutoPlay {
   }
 
   start () {
-    // pitchController.setValue(10)
     if (this.running) {
       return
     }
@@ -35,10 +32,10 @@ export default class AutoPlay {
 
     let x = simplex.noise2D(performance.now() / 10000, 0)
     const palindrome = new Nexus.Sequence(Mod.palindrome([0, 7, 12, 3, 4, 2, 11]))
-    const dice = new Nexus.Sequence(Rand.dice(10))
+    // const dice = new Nexus.Sequence(Rand.dice(10))
 
     granular.set({
-      pitch: 1
+      pitch: pitchController.getValue()
     })
 
     granular.startVoice({
@@ -47,17 +44,20 @@ export default class AutoPlay {
       volume: 0.5
     })
 
-    const interpolate = interpolatePresets('deeper', 1000)
-    console.log(interpolate)
-    let mode = 'interp'
-    
+    let interpolate = interpolatePresets(settings.endPreset, 2000)
+
+    // FIXME: when stopping it jumps values instead of continuing from the previous position
+    // TODO: then add networking to phones
+    // TODO: interaction #3 - presets
     const run = () => {
-      if (mode === 'interp') {
-        // run the interp settings
+      let mode = settings.mode
+      
+      if (mode === 'interpolate') {
+        // run the interpolate settings
         if (interpolate.pitch.position !== interpolate.pitch.values.length - 1) {
           granular.set({
             pitch: interpolate.pitch.next(), // interpolating between presets
-            density: interpolate.density.next(), 
+            density: interpolate.density.next(),
             envelope: {
               attack: interpolate.attack.next(),
               release: interpolate.release.next()
