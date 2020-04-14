@@ -51,34 +51,18 @@ gui.remember(settings)
 
 const presets = gui.load.remembered
 
-export function interpolatePresets (startPreset, endPreset, steps) {
-  let pitches = []
-  let density = []
+export function interpolatePresets (endPreset, steps) {
   let preset = {}
-
-  let start = presets[startPreset][0]
   let end = presets[endPreset][0]
-
-  Object.keys(start).forEach((setting, i) => {
-    console.log(start[setting], setting, i)
-    if (setting === 'pitch') {
-      pitches.push(start[setting])
-    } else if (setting === 'density') {
-      density.push(start[setting])
-    }
-  })
 
   Object.keys(end).forEach((setting, i) => {
     if (setting === 'pitch') {
-      pitches.push(end[setting])
-      preset.pitch = new Nexus.Sequence(spreadInclusiveFloat(steps, pitches[0], pitches[1]))
+      preset.pitch = new Nexus.Sequence(spreadInclusiveFloat(steps, pitchController.getValue(), end[setting]))
     } else if (setting === 'density') {
-      density.push(end[setting])
-      preset.density = new Nexus.Sequence(spreadInclusiveFloat(steps, density[0], density[1]))
+      preset.density = new Nexus.Sequence(spreadInclusiveFloat(steps, densityController.getValue(), end[setting]))
     }
   })
   
   return preset
 }
-// const interpolate = interpolatePresets('preset1', 'sparse', 10)
-// console.log(interpolate)
+
