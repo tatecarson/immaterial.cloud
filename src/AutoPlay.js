@@ -53,6 +53,7 @@ export default class AutoPlay {
         
     // TODO: then add networking to phones
     // TODO: interaction #3 - presets
+    // TODO: play with automating density to get different rhythms of grains
     const run = () => {
       let mode = settings.mode
 
