@@ -17,7 +17,8 @@ export default class Grains {
 
     const s = (sketch) => {
       sketch.setup = function () {
-        const canvas = sketch.createCanvas(sketch.windowWidth, sketch.windowHeight)
+        // const canvas = sketch.createCanvas(sketch.windowWidth, sketch.windowHeight)
+        const canvas = sketch.createCanvas(0, 0)
         canvas.parent('canvases')
 
         sketch.rectMode(sketch.CENTER)
@@ -25,7 +26,7 @@ export default class Grains {
         sketch.fill('#FFF')
         sketch.stroke('blue')
         sketch.strokeWeight(2)
-        sketch.noCursor()
+        
 
         granular.on('grainCreated', (grain) => {
           const { position } = grain
@@ -48,7 +49,7 @@ export default class Grains {
           capture = sketch.createCapture(sketch.VIDEO)
           capture.size(sketch.displayWidth, sketch.displayHeight)
           capture.hide()
-  
+
           sourceData = sketch.createImage(sketch.width, sketch.height)
           prevFrame = sketch.createImage(sketch.width, sketch.height)
           blended = sketch.createImage(sketch.width, sketch.height)
@@ -56,7 +57,7 @@ export default class Grains {
           sourceData.loadPixels()
           blended.loadPixels()
           prevFrame.loadPixels()
-  
+
           sketch.frameRate(15)
         }
       }
@@ -68,30 +69,32 @@ export default class Grains {
           getMovement(capture, sourceData, prevFrame, blended)
           checkAreas(blendedData, blended)
         }
+
       }
 
-      sketch.mousePressed = function () {
-        granular.startVoice({
-          id: ID,
-          position: map(sketch.mouseX, 0, sketch.width, 0, 1),
-          volume: 0.5
-        })
-      };
+      // Comment out temporarily so I can mess with peer-js
+      // sketch.mousePressed = function () {
+      //   granular.startVoice({
+      //     id: ID,
+      //     position: map(sketch.mouseX, 0, sketch.width, 0, 1),
+      //     volume: 0.5
+      //   })
+      // }
 
-      sketch.mouseDragged = function () {
-        granular.updateVoice(ID, {
-          position: map(sketch.mouseX, 0, sketch.width, 0, 1),
-          volume: 0.5
-        })
-      };
+      // sketch.mouseDragged = function () {
+      //   granular.updateVoice(ID, {
+      //     position: map(sketch.mouseX, 0, sketch.width, 0, 1),
+      //     volume: 0.5
+      //   })
+      // }
 
-      sketch.mouseReleased = function () {
-        granular.stopVoice(ID)
-      };
+      // sketch.mouseReleased = function () {
+      //   granular.stopVoice(ID)
+      // }
 
       sketch.windowResized = function () {
         sketch.resizeCanvas(sketch.windowWidth, sketch.windowHeight)
-      };
+      }
 
       function getMovement (capture, sourceData, prevFrame, blended) {
         sourceData.copy(capture, 0, 0, sketch.width, sketch.height, 0, 0, sketch.width, sketch.height)
@@ -124,7 +127,7 @@ export default class Grains {
             average += (blendedData.pixels[i * 4] + blendedData.pixels[i * 4 + 1] + blendedData.pixels[i * 4 + 2]) / 3
             ++i
           }
-          
+
           // calculate an average between of the color values of the note area
           average = Math.round(average / (blendedData.pixels.length * 0.25))
           if (average > 10 && !isSeen) {

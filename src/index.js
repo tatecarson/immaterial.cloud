@@ -4,14 +4,15 @@ import p5 from 'p5'
 import 'p5/lib/addons/p5.sound'
 import getData from './getData'
 
-import Waveform from './Waveform'
+// import Waveform from './Waveform'
 import Grains from './Grains'
-import DragAndDrop from './DragAndDrop'
+// import DragAndDrop from './DragAndDrop'
 import AutoPlay from './AutoPlay'
 
+import { Peers } from './Peers'
 // TODO: explore around
 // TODO: add peerjs chatroom capabilities to this 
-
+// TODO: make canvas transparent or smaller so you can click on peerjs stuff
 const PRESETS = [
   {
     name: 1,
@@ -35,185 +36,193 @@ const pillPlay = document.getElementById('pill-play'),
   pillLoading = document.getElementById('pill-loading'),
   pillTitle = document.getElementById('pill-title'),
   canvases = document.getElementById('canvases'),
-  presets = document.getElementById('presets')
+  presets = document.getElementById('presets');
 
 let autoPlay,
   dragAndDrop,
-  granular
+  granular;
 
-const AUDIO_BUFFER_CACHE = {}
+const AUDIO_BUFFER_CACHE = {};
 
-function stopPropagation (event) {
-  event.stopPropagation()
+function stopPropagation(event) {
+  event.stopPropagation();
 }
 
-async function loadUserData (data) {
-  autoPlay.stop()
+async function loadUserData(data) {
+  autoPlay.stop();
 
-  pillPlay.textContent = 'Play'
+  pillPlay.textContent = 'Play';
 
-  pillLoading.classList.remove('hidden')
-  pillPlay.classList.add('inactive')
-  presets.classList.add('inactive')
+  pillLoading.classList.remove('hidden');
+  pillPlay.classList.add('inactive');
+  presets.classList.add('inactive');
 
-  const buttons = Array.from(document.querySelectorAll('#presets .preset'))
+  const buttons = Array.from(document.querySelectorAll('#presets .preset'));
 
-  buttons.forEach(b => b.classList.add('pill-inverted'))
+  buttons.forEach(b => b.classList.add('pill-inverted'));
 
-  await granular.setBuffer(data)
+  await granular.setBuffer(data);
 
-  pillLoading.classList.add('hidden')
-  pillPlay.classList.remove('inactive')
-  presets.classList.remove('inactive')
+  pillLoading.classList.add('hidden');
+  pillPlay.classList.remove('inactive');
+  presets.classList.remove('inactive');
 }
 
-async function loadPreset ({ name, url }) {
+async function loadPreset({ name, url }) {
+  Peers()
   if (process.ENV === 'development') {
+    console.log(`load preset ${name}`);
   }
 
-  autoPlay.stop()
+  autoPlay.stop();
 
-  pillPlay.textContent = 'Play'
+  pillPlay.textContent = 'Play';
 
-  pillLoading.classList.remove('hidden')
-  pillPlay.classList.add('inactive')
-  presets.classList.add('inactive')
+  pillLoading.classList.remove('hidden');
+  pillPlay.classList.add('inactive');
+  presets.classList.add('inactive');
 
-  let data
+  let data;
 
+  if (AUDIO_BUFFER_CACHE[name]) {
 
-  data = await getData(url)
-  const audioBuffer = await granular.setBuffer(data)
+    // AudioBuffer
+    data = AUDIO_BUFFER_CACHE[name];
+  } else {
 
-  AUDIO_BUFFER_CACHE[name] = audioBuffer
+    // ArrayBuffer
+    data = await getData(url);
+  }
 
-  pillLoading.classList.add('hidden')
-  pillPlay.classList.remove('inactive')
-  presets.classList.remove('inactive')
+  const audioBuffer = await granular.setBuffer(data);
+
+  AUDIO_BUFFER_CACHE[name] = audioBuffer;
+
+  pillLoading.classList.add('hidden');
+  pillPlay.classList.remove('inactive');
+  presets.classList.remove('inactive');
 }
 
-function createPresets (data, text) {
+function createPresets(data, text) {
   PRESETS.forEach((preset) => {
-    const { name } = preset
+    const { name } = preset;
 
-    const button = document.createElement('div')
+    const button = document.createElement('div');
 
-    button.classList.add('preset', 'pill', 'pill-inverted', 'pill-button')
+    button.classList.add('preset', 'pill', 'pill-inverted', 'pill-button');
 
-    button.textContent = name
+    button.textContent = name;
 
     button.addEventListener('click', () => {
-      const buttons = Array.from(document.querySelectorAll('#presets .preset'))
+      const buttons = Array.from(document.querySelectorAll('#presets .preset'));
 
       buttons.forEach((b) => {
         if (button === b) {
-          b.classList.remove('pill-inverted')
+          b.classList.remove('pill-inverted');
         } else {
-          b.classList.add('pill-inverted')
+          b.classList.add('pill-inverted');
         }
-      })
+      });
 
 
-      loadPreset(preset)
-    })
+      loadPreset(preset);
+    });
 
-    presets.appendChild(button)
-  })
+    presets.appendChild(button);
+  });
 }
 
-async function init () {
-  const audioContext = p5.prototype.getAudioContext()
+async function init() {
+  const audioContext = p5.prototype.getAudioContext();
 
   granular = new Granular({
     audioContext,
     envelope: {
-      attack: 0.2,
+      attack: 0,
       decay: 0.5
     },
     density: 0.8,
     spread: 0.1,
     pitch: 1
-  })
+  });
 
-  const delay = new p5.Delay()
+  const delay = new p5.Delay();
 
-  delay.process(granular, 0, 0.5, 3000) // source, delayTime, feedback, filter frequency
+  delay.process(granular, 0, 0.5, 3000); // source, delayTime, feedback, filter frequency
 
-  const reverb = new p5.Reverb()
+  const reverb = new p5.Reverb();
 
-  reverb.process(delay) // source, reverbTime, decayRate in %, reverse
+  // due to a bug setting parameters will throw error
+  // https://github.com/processing/p5.js/issues/3090
+  reverb.process(delay); // source, reverbTime, decayRate in %, reverse
 
-  reverb.amp(0)
+  reverb.amp(1);
 
-  const compressor = new p5.Compressor()
+  const compressor = new p5.Compressor();
 
-  compressor.process(reverb, 0.005, 6, 10, -24, 0.05) // [attack], [knee], [ratio], [threshold], [release]
+  compressor.process(reverb, 0.005, 6, 10, -24, 0.05); // [attack], [knee], [ratio], [threshold], [release]
 
-  const waveform = new Waveform()
+  // const waveform = new Waveform();
 
-  new Grains(granular)
+  new Grains(granular);
 
-  dragAndDrop = new DragAndDrop(canvases)
 
-  dragAndDrop.on('fileRead', async ({ data }) => {
-    loadUserData(data)
-  })
+  // granular.on('bufferSet', ({ buffer }) => {
+  //   waveform.draw(buffer);
+  // });
 
-  granular.on('bufferSet', ({ buffer }) => {
-    waveform.draw(buffer)
-  })
-
-  autoPlay = new AutoPlay(granular)
+  autoPlay = new AutoPlay(granular);
 
   pillPlay.addEventListener('click', (event) => {
-    event.preventDefault()
-    event.stopPropagation()
+    event.preventDefault();
+    event.stopPropagation();
 
     if (autoPlay.isRunning()) {
-      autoPlay.stop()
+      autoPlay.stop();
 
-      pillPlay.textContent = 'Play'
+      pillPlay.textContent = 'Play';
     } else {
-      autoPlay.start()
+      autoPlay.start();
 
-      pillPlay.textContent = 'Stop'
+      pillPlay.textContent = 'Stop';
     }
-  })
+  });
 
   window.addEventListener('keydown', (key) => {
+
     // space
     if (event.keyCode === 32) {
       if (autoPlay.isRunning()) {
-        autoPlay.stop()
+        autoPlay.stop();
 
-        pillPlay.textContent = 'Play'
+        pillPlay.textContent = 'Play';
       } else {
-        autoPlay.start()
-   
-        pillPlay.textContent = 'Stop'
+        autoPlay.start();
+
+        pillPlay.textContent = 'Stop';
       }
     }
-  })
+  });
 
-  createPresets()
+  createPresets();
 
-  const buttons = Array.from(document.querySelectorAll('#presets .preset'))
+  const buttons = Array.from(document.querySelectorAll('#presets .preset'));
 
-  buttons.concat([pillPlay, pillTitle]).forEach(element => {
+  buttons.concat([pillPlay]).forEach(element => {
     [
       'click',
       'mousedown',
       'touchstart'
     ].forEach(event => {
-      element.addEventListener(event, stopPropagation)
-    })
-  })
+      element.addEventListener(event, stopPropagation);
+    });
+  });
 
-  buttons[0].classList.remove('pill-inverted')
+  buttons[0].classList.remove('pill-inverted');
 
-  await loadPreset(PRESETS[0])
+  await loadPreset(PRESETS[0]);
 
-  pillPlay.classList.add('animated', 'pulse')
+  pillPlay.classList.add('animated', 'pulse');
 }
 
-init()
+init();

@@ -13,3 +13,17 @@ export function spreadInclusiveFloat (len = 1, lo = len, hi = 0) {
   }
   return arr
 }
+
+Number.prototype.pad = function (size) {
+  var s = String(this)
+  while (s.length < (size || 2)) {
+    s = '0' + s
+  }
+  return s
+};
+
+export function randomDigits (length) {
+  return Math.floor(100000 + Math.random() * 900000).pad(length)
+}
+
+console.log(randomDigits(6))

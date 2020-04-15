@@ -70,7 +70,6 @@ export function interpolatePresets (startValue, endPreset, steps) {
   let preset = {}
   let end = presets[endPreset][0]
 
-  // TODO: startValue needs to be given from controllers
   Object.keys(end).forEach((setting, i) => {
     if (setting === 'pitch') {
       preset.pitch = new Nexus.Sequence(spreadInclusiveFloat(steps, startValue.pitch, end[setting]))

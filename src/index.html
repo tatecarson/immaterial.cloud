@@ -6,7 +6,7 @@
   <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.min.css">
+  <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.min.css"> -->
   <style>
     * {
       box-sizing: border-box;
@@ -14,7 +14,7 @@
       font-weight: bold;
       margin: 0;
       padding: 0;
-      user-select: none;
+      /* user-select: none; */
     }
 
     html,
@@ -151,14 +151,84 @@
 </head>
 
 <body>
-  <div id="canvases"></div>
+  <div id="context">
+    <h4>PEERJS CHATROOM</h4>
 
-  <div id="pill-title" class="pill"><a target="blank" href="https://github.com/philippfromme/granular-js-demo">granular-js demo</a></div>
+    <h4>CONNECTION STATUS</h4>
+    <code id="selfId">
+                    A MOMENT PLEASE...
+                </code>
+    <button id="signallerBtn" class="full-width" disabled autocomplete="off" onclick="reconnect()">
+      ◌ SEARCHING FOR SIGNALLER...
+    </button>
+    <cite>
+      <small>
+        <h5>DISCONNECTED FROM SIGNALLER?</h5>
+        <p>
+          Don't panic! Existing peer connections will not be
+          affected. You can reconnect to signaller again if:
+        </p>
+        <ul>
+          <li>Host wants to accept new peer connections.</li>
+          <li>Client wants to connect to new host.</li>
+        </ul>
+        <p>See the footnote for longer explanation.</p>
+      </small>
+    </cite>
 
-  <div class="centered">
-    <div id="pill-drop" class="pill animated pulse infinite hidden">Drop Audio</div>
-    <div id="pill-loading" class="pill animated pulse infinite">Loading</div>
+    <code id="hostId">
+                    NOT CONNECTED TO ANYONE
+                </code>
+    <input id="hostIdVal" class="full-width" type="text" placeholder="Host ID to join?" autocomplete="off" />
+
+    <button id="hostIdBtn" class="full-width" onclick="join()">
+      JOIN
+    </button>
+
+    <h4>PEER LIST</h4>
+    <code id="peerList" style="display: block; height: 5em; overflow: scroll;">
+                </code>
+
+    <h4>MESSAGE BOARD</h4>
+    <code id="messageBoard" style="display: block; height: 20em; overflow: scroll;">
+                </code>
+    <input id="message" class="full-width" type="text" placeholder="Write some jokes here..." autocomplete="off" />
+    <button class="full-width" onclick="send()">
+      SEND
+    </button>
+
+    <h4>WHY RECONNECT?</h4>
+    <small>
+      <p>
+        PeerJS requires an intermediate "signaller" to initiate
+        connection between two peers. Soon after two peers know how
+        to reach each other, the signaller waits for a short time
+        and then disconnect itself. This is to free up resources.
+      </p>
+      <p>
+        Thus, host and client have to reconnect to signaller again
+        to make themselves discoverable by other peers.
+      </p>
+    </small>
+
+    <h4>ABOUT</h4>
+    <small>
+      <p>A simple peer-to-peer chat room using PeerJS.</p>
+      <p>
+        This is a sample project to demonstrate P2P connection using
+        PeerJS and PeerJS Server.
+      </p>
+      <p>
+        The topology of this application can be classified as a star
+        network where the hosting-peer facilitates all
+        communications between client-peer. Note that hosting-peer
+        is also part of the client-peer so it can participates in
+        the chat.
+      </p>
+    </small>
   </div>
+  <div id="canvases"></div>
+  <div id="pill-loading" class="pill animated pulse infinite">Loading</div>
 
   <div class="bottom">
     <button id="pill-play" class="pill pill-inverted pill-button inactive">Play!</button>
@@ -167,10 +237,8 @@
       <span class="label">Presets</span>
     </div>
   </div>
-  <script src="./index.js"></script>
-  <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.0.0/p5.min.js" integrity="sha256-Pg1di+fBF53Rbh9oZR/FeD1xsFzTLC963lcac1D0ias=" crossorigin="anonymous"></script> -->
 
-  <!-- <script src="p5.vida.min.js"></script> -->
+  <script src="./index.js"></script>
 </body>
 
 </html>
