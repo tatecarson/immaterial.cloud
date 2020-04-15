@@ -31,6 +31,9 @@ export function Peers() {
       'YOUR ID IS ' + id
 
     updatePeerList()
+
+    document.getElementById('hostIdBtn').addEventListener('click', () => join())
+    document.getElementById('send-message').addEventListener('click', () => send())
   })
 
   peer.on('connection', (connection) => {
