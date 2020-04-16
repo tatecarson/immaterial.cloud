@@ -26,7 +26,6 @@ export default class Grains {
         sketch.fill('#FFF')
         sketch.stroke('blue')
         sketch.strokeWeight(2)
-        
 
         granular.on('grainCreated', (grain) => {
           const { position } = grain
@@ -69,7 +68,6 @@ export default class Grains {
           getMovement(capture, sourceData, prevFrame, blended)
           checkAreas(blendedData, blended)
         }
-
       }
 
       // Comment out temporarily so I can mess with peer-js

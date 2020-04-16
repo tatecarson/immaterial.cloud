@@ -43,14 +43,16 @@ export default class AutoPlay {
       position: map(x, -1, 1, 0, 1),
       volume: 0.5
     })
-    
+
+    // TODO: set this to receive data from other peer
+    console.log(settings.endPreset)
     let interpolate = interpolatePresets({
       density: granular.state.density,
       pitch: granular.state.pitch,
       attack: granular.state.envelope.attack,
       release: granular.state.envelope.release
     }, settings.endPreset, 3000)
-        
+
     // TODO: then add networking to phones
     // TODO: interaction #3 - presets
     // TODO: play with automating density to get different rhythms of grains

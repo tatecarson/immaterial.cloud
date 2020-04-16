@@ -20,7 +20,7 @@ Number.prototype.pad = function (size) {
     s = '0' + s
   }
   return s
-};
+}
 
 export function randomDigits (length) {
   return Math.floor(100000 + Math.random() * 900000).pad(length)

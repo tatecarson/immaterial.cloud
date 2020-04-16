@@ -1,10 +1,11 @@
 import Peer from 'peerjs'
 import { Map } from 'immutable'
 import { randomDigits } from './utils'
+import { settings } from './presets'
 
 // TODO: connecting to signaler but not to other clients
 // probably has something to do with DOM?
-export function Peers() {
+export function Peers () {
   let clientConnections = Map({})
   let hostConnection
 
@@ -57,7 +58,7 @@ export function Peers() {
       }
 
       updatePeerList()
-      updateMessageBoard(data.sender, data.message)
+      updatePreset(data.sender, data.message)
 
       broadcast({
         ...data,
@@ -68,7 +69,7 @@ export function Peers() {
     connection.on('data', (data) => {
       console.log('Recvied data:\n', data)
 
-      updateMessageBoard(data.sender, data.message)
+      updatePreset(data.sender, data.message)
 
       broadcast({
         ...data,
@@ -88,7 +89,7 @@ export function Peers() {
       }
 
       updatePeerList()
-      updateMessageBoard(data.sender, data.message)
+      updatePreset(data.sender, data.message)
 
       broadcast({
         ...data,
@@ -114,7 +115,7 @@ export function Peers() {
     console.log(error)
   })
 
-  function reconnect() {
+  function reconnect () {
     console.log(`Reconnecting to signaller.`)
     document.getElementById('signallerBtn').disabled = true
 
@@ -124,7 +125,7 @@ export function Peers() {
     peer.reconnect()
   }
 
-  function join() {
+  function join () {
     hostConnection = peer.connect(
       document.getElementById('hostIdVal').value
     )
@@ -140,11 +141,10 @@ export function Peers() {
     })
 
     hostConnection.on('data', (data) => {
-      // TODO: synth goes here
 
       console.log('Recvied data:\n', data)
 
-      updateMessageBoard(data.sender, data.message)
+      updatePreset(data.sender, data.message)
 
       updatePeerList(data.peers)
     })
@@ -160,17 +160,20 @@ export function Peers() {
     })
   }
 
-  function updateMessageBoard(id, message) {
+  function updatePreset(id, message) {
+    console.log("updatePreset -> message", message)
+    settings.endPreset = message
+
     document.getElementById(
       'messageBoard'
     ).innerText += `[${id}]: ${message}\n`
   }
 
-  function updatePeerList(peerList) {
+  function updatePeerList (peerList) {
     document.getElementById('peerList').innerText = peerList || generatePeerList()
   }
 
-  function generatePeerList() {
+  function generatePeerList () {
     return clientConnections
       .map((connection) => connection.peer)
       .toList()
@@ -178,13 +181,13 @@ export function Peers() {
       .join(', ')
   }
 
-  function broadcast(data) {
+  function broadcast (data) {
     clientConnections.forEach((connection) =>
       connection.send(data)
     )
   }
 
-  function send() {
+  function send () {
     const data = {
       sender: peerId,
       message: document.getElementById('message').value
@@ -202,21 +205,21 @@ export function Peers() {
         peers: generatePeerList()
       })
 
-      updateMessageBoard(data.sender, data.message)
+      updatePreset(data.sender, data.message)
     }
 
     document.getElementById('message').innerText = ''
   }
 
-  function clear() {
+  function clear () {
     document.getElementById('message').innerText = ''
   }
 
-  function hide(element) {
+  function hide (element) {
     element.classList.add('hidden')
   }
 
-  function show(element) {
+  function show (element) {
     element.classList.remove('hidden')
   }
 }

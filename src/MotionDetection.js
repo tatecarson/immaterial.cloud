@@ -1,13 +1,13 @@
-function fastAbs(value) {
+function fastAbs (value) {
   // funky bitwise, equal Math.abs
   return (value ^ (value >> 31)) - (value >> 31)
 }
 
-function threshold(value) {
+function threshold (value) {
   return (value > 0x15) ? 0xFF : 0
 }
 
-export function differenceAccuracy(target, data1, data2) {
+export function differenceAccuracy (target, data1, data2) {
   if (data1.length != data2.length) return null
   var i = 0
   while (i < (data1.length * 0.25)) {
@@ -21,4 +21,3 @@ export function differenceAccuracy(target, data1, data2) {
     ++i
   }
 }
-

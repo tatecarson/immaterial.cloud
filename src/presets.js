@@ -4,45 +4,45 @@ import Nexus from 'nexusui'
 
 export const gui = new dat.GUI({
   load: {
-    "preset": "cloud",
-    "remembered": {
-      "preset1": {
-        "0": {
-          "pitch": 5.331566469093988,
-          "attack": 0.8720000000000002,
-          "release": 1.320000000000001,
-          "density": 0.6591024555461473
+    'preset': 'cloud',
+    'remembered': {
+      'preset1': {
+        '0': {
+          'pitch': 5.331566469093988,
+          'attack': 0.8720000000000002,
+          'release': 1.320000000000001,
+          'density': 0.6591024555461473
         }
       },
-      "deeper": {
-        "0": {
-          "pitch": 0.7274682472480949,
-          "attack": 0.05199999999999981,
-          "release": 1.320000000000001,
-          "density": 0.10635055038103303
+      'deeper': {
+        '0': {
+          'pitch': 0.7274682472480949,
+          'attack': 0.05199999999999981,
+          'release': 1.320000000000001,
+          'density': 0.10635055038103303
         }
       },
-      "sparse": {
-        "0": {
-          "pitch": 2.727468247248095,
-          "attack": 0.05199999999999981,
-          "release": 1.320000000000001,
-          "density": 0.10635055038103303
+      'sparse': {
+        '0': {
+          'pitch': 2.727468247248095,
+          'attack': 0.05199999999999981,
+          'release': 1.320000000000001,
+          'density': 0.10635055038103303
         }
       },
-      "cloud": {
-        "0": {
-          "pitch": 2.727468247248095,
-          "attack": 0.05199999999999981,
-          "release": 1.320000000000001,
-          "density": 0.7,
-          "mode": "interpolate",
-          "endPreset": "cloud"
+      'cloud': {
+        '0': {
+          'pitch': 2.727468247248095,
+          'attack': 0.05199999999999981,
+          'release': 1.320000000000001,
+          'density': 0.7,
+          'mode': 'interpolate',
+          'endPreset': 'cloud'
         }
       }
     },
-    "closed": false,
-    "folders": {}
+    'closed': false,
+    'folders': {}
   }
 })
 
