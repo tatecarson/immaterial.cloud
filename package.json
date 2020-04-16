@@ -4,7 +4,8 @@
   "description": "Granular synthesis library example",
   "main": "index.js",
   "scripts": {
-    "start": "parcel src/index.html --no-source-maps --no-cache"
+    "start": "parcel src/index.html --no-source-maps --no-cache",
+    "lint": "standard src/* --fix"
   },
   "browserslist": [
     "last 1 Chrome version",

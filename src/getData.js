@@ -1,17 +1,17 @@
-export default async function getData(url) {
+export default async function getData (url) {
   return new Promise((resolve) => {
-    const request = new XMLHttpRequest();
+    const request = new XMLHttpRequest()
 
-    request.open('GET', url, true);
+    request.open('GET', url, true)
 
-    request.responseType = 'arraybuffer';
+    request.responseType = 'arraybuffer'
 
-    request.onload = function() {
-    const audioData = request.response;
+    request.onload = function () {
+      const audioData = request.response
 
-    resolve(audioData);
+      resolve(audioData)
     }
 
-    request.send();
-  });
+    request.send()
+  })
 }

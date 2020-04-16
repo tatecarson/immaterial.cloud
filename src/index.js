@@ -4,14 +4,15 @@ import p5 from 'p5'
 import 'p5/lib/addons/p5.sound'
 import getData from './getData'
 
-import Waveform from './Waveform'
+// import Waveform from './Waveform'
 import Grains from './Grains'
-import DragAndDrop from './DragAndDrop'
+// import DragAndDrop from './DragAndDrop'
 import AutoPlay from './AutoPlay'
 
+import {Peers} from './Peers'
 // TODO: explore around
-// TODO: add peerjs chatroom capabilities to this 
-
+// TODO: add peerjs chatroom capabilities to this
+// TODO: make canvas transparent or smaller so you can click on peerjs stuff
 const PRESETS = [
   {
     name: 1,
@@ -68,7 +69,9 @@ async function loadUserData (data) {
 }
 
 async function loadPreset ({ name, url }) {
+  Peers()
   if (process.ENV === 'development') {
+    console.log(`load preset ${name}`)
   }
 
   autoPlay.stop()
@@ -81,8 +84,14 @@ async function loadPreset ({ name, url }) {
 
   let data
 
+  if (AUDIO_BUFFER_CACHE[name]) {
+    // AudioBuffer
+    data = AUDIO_BUFFER_CACHE[name]
+  } else {
+    // ArrayBuffer
+    data = await getData(url)
+  }
 
-  data = await getData(url)
   const audioBuffer = await granular.setBuffer(data)
 
   AUDIO_BUFFER_CACHE[name] = audioBuffer
@@ -113,7 +122,6 @@ function createPresets (data, text) {
         }
       })
 
-
       loadPreset(preset)
     })
 
@@ -127,7 +135,7 @@ async function init () {
   granular = new Granular({
     audioContext,
     envelope: {
-      attack: 0.2,
+      attack: 0,
       decay: 0.5
     },
     density: 0.8,
@@ -141,27 +149,23 @@ async function init () {
 
   const reverb = new p5.Reverb()
 
+  // due to a bug setting parameters will throw error
+  // https://github.com/processing/p5.js/issues/3090
   reverb.process(delay) // source, reverbTime, decayRate in %, reverse
 
-  reverb.amp(0)
+  reverb.amp(1)
 
   const compressor = new p5.Compressor()
 
   compressor.process(reverb, 0.005, 6, 10, -24, 0.05) // [attack], [knee], [ratio], [threshold], [release]
 
-  const waveform = new Waveform()
+  // const waveform = new Waveform();
 
   new Grains(granular)
 
-  dragAndDrop = new DragAndDrop(canvases)
-
-  dragAndDrop.on('fileRead', async ({ data }) => {
-    loadUserData(data)
-  })
-
-  granular.on('bufferSet', ({ buffer }) => {
-    waveform.draw(buffer)
-  })
+  // granular.on('bufferSet', ({ buffer }) => {
+  //   waveform.draw(buffer);
+  // });
 
   autoPlay = new AutoPlay(granular)
 
@@ -189,7 +193,7 @@ async function init () {
         pillPlay.textContent = 'Play'
       } else {
         autoPlay.start()
-   
+
         pillPlay.textContent = 'Stop'
       }
     }
@@ -199,7 +203,7 @@ async function init () {
 
   const buttons = Array.from(document.querySelectorAll('#presets .preset'))
 
-  buttons.concat([pillPlay, pillTitle]).forEach(element => {
+  buttons.concat([pillPlay]).forEach(element => {
     [
       'click',
       'mousedown',
