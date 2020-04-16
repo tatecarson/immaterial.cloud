@@ -10,9 +10,7 @@ import Grains from './Grains'
 import AutoPlay from './AutoPlay'
 
 import {Peers} from './Peers'
-// TODO: explore around
-// TODO: add peerjs chatroom capabilities to this
-// TODO: make canvas transparent or smaller so you can click on peerjs stuff
+
 const PRESETS = [
   {
     name: 1,

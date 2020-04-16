@@ -3,8 +3,6 @@ import { Map } from 'immutable'
 import { randomDigits } from './utils'
 import { settings } from './presets'
 
-// TODO: connecting to signaler but not to other clients
-// probably has something to do with DOM?
 export function Peers () {
   let clientConnections = Map({})
   let hostConnection
@@ -161,9 +159,8 @@ export function Peers () {
   }
 
   function updatePreset(id, message) {
-    console.log("updatePreset -> message", message)
     settings.endPreset = message
-
+    
     document.getElementById(
       'messageBoard'
     ).innerText += `[${id}]: ${message}\n`

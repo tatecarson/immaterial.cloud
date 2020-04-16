@@ -44,8 +44,6 @@ export default class AutoPlay {
       volume: 0.5
     })
 
-    // TODO: set this to receive data from other peer
-    console.log(settings.endPreset)
     let interpolate = interpolatePresets({
       density: granular.state.density,
       pitch: granular.state.pitch,

@@ -198,11 +198,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-<<<<<<< HEAD
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "52842" + '/');
-=======
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "64894" + '/');
->>>>>>> peer-js
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "57167" + '/');
 
   ws.onmessage = function (event) {
     var data = JSON.parse(event.data);

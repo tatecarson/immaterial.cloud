@@ -2,6 +2,7 @@ import p5 from 'p5'
 import 'p5/lib/addons/p5.dom'
 import { differenceAccuracy } from './MotionDetection'
 import { map } from './utils'
+import { settings } from './presets'
 
 const ID = 'grains'
 
@@ -13,12 +14,12 @@ export default class Grains {
     let blended
     let sourceData
     let blendedData
-    const movementIsRunning = false
+    const movementIsRunning = true
 
     const s = (sketch) => {
       sketch.setup = function () {
-        // const canvas = sketch.createCanvas(sketch.windowWidth, sketch.windowHeight)
-        const canvas = sketch.createCanvas(0, 0)
+        const canvas = sketch.createCanvas(sketch.windowWidth, sketch.windowHeight)
+        // const canvas = sketch.createCanvas(0, 0)
         canvas.parent('canvases')
 
         sketch.rectMode(sketch.CENTER)
@@ -128,21 +129,27 @@ export default class Grains {
 
           // calculate an average between of the color values of the note area
           average = Math.round(average / (blendedData.pixels.length * 0.25))
+          // TODO: change preset from here
+          // this must be getting reset from somewhere else? 
+          // FIXME: why sometimes can I not click play?
+          // TODO: send message from here that changes others presets
           if (average > 10 && !isSeen) {
             isSeen = true
             sketch.fill(255, 0, 0)
             sketch.rect(1 / num * r * sketch.width, 0, sketch.width / num, sketch.height)
-            console.log('area:', r, 'average: ', average)
-            granular.startVoice({
-              id: ID,
-              position: map(r, 0, sketch.width, 0, 1),
-              volume: 0.5
-            })
+            
+            // granular.startVoice({
+            //   id: ID,
+            //   position: map(r, 0, sketch.width, 0, 1),
+            //   volume: 0.5
+            // })
+            settings.endPreset = 'deeper'
           } else {
             if (isSeen) {
               isSeen = false
             }
-            granular.stopVoice(ID)
+            settings.endPreset = 'cloud'
+            // granular.stopVoice(ID)
           }
         }
       }
