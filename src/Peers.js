@@ -3,220 +3,222 @@ import { Map } from 'immutable'
 import { randomDigits } from './utils'
 import { settings } from './presets'
 
-export function Peers () {
-  let clientConnections = Map({})
-  let hostConnection
+var clientConnections = Map({});
 
-  const peerId = randomDigits(4)
-  // const peer = new Peer('asfasfdafsdfsd', {
-  //   host: 'kfwong-server.herokuapp.com',
-  //   port: 443,
-  //   path: '/myapp',
-  //   secure: true,
-  // });
+var hostConnection;
 
-  const peer = new Peer(peerId)
-  peer.on('open', (id) => {
-    console.log('Connection to signaller establised.')
-    console.log(`Assigning id: ${id}`)
+const peerId = randomDigits(4);
 
-    document.getElementById(
-      'signallerBtn'
-    ).innerText = `✔ CONNECTED TO SIGNALLER`
+export const peer = new Peer(peerId)
+document.getElementById('hostIdBtn').addEventListener('click', () => join())
 
-    document.getElementById('signallerBtn').disabled = true
+// TODO: keep going with this it seems to be working
+peer.on('open', (id) => {
 
-    document.getElementById('selfId').innerText =
-      'YOUR ID IS ' + id
+  console.log('Connection to signaller establised.');
+  console.log(`Assigning id: ${id}`);
 
-    updatePeerList()
+  document.getElementById(
+    'signallerBtn',
+  ).innerText = `✔ CONNECTED TO SIGNALLER`;
 
-    document.getElementById('hostIdBtn').addEventListener('click', () => join())
-    document.getElementById('send-message').addEventListener('click', () => send())
-  })
+  document.getElementById('signallerBtn').disabled = true;
 
-  peer.on('connection', (connection) => {
+  document.getElementById('selfId').innerText =
+    'YOUR ID IS ' + id;
+
+  updatePeerList();
+});
+
+peer.on('connection', (connection) => {
+  console.log(
+    `${connection.peer} attempting to establish connection.`,
+  );
+
+  connection.on('open', () => {
     console.log(
-      `${connection.peer} attempting to establish connection.`
-    )
+      `Connection to ${connection.peer} established.`,
+    );
 
-    connection.on('open', () => {
-      console.log(
-        `Connection to ${connection.peer} established.`
-      )
+    clientConnections = clientConnections.set(
+      connection.peer,
+      connection,
+    );
 
-      clientConnections = clientConnections.set(
-        connection.peer,
-        connection
-      )
-
-      const data = {
-        sender: 'SYSTEM',
-        message: `${connection.peer} joined.`
-      }
-
-      updatePeerList()
-      updatePreset(data.sender, data.message)
-
-      broadcast({
-        ...data,
-        peers: generatePeerList()
-      })
-    })
-
-    connection.on('data', (data) => {
-      console.log('Recvied data:\n', data)
-
-      updatePreset(data.sender, data.message)
-
-      broadcast({
-        ...data,
-        peers: generatePeerList()
-      })
-    })
-
-    connection.on('close', () => {
-      console.log(`Connection to ${connection.peer} is closed.`)
-      clientConnections = clientConnections.delete(
-        connection.peer.toString()
-      )
-
-      const data = {
-        sender: 'SYSTEM',
-        message: `${connection.peer} left.`
-      }
-
-      updatePeerList()
-      updatePreset(data.sender, data.message)
-
-      broadcast({
-        ...data,
-        peers: generatePeerList()
-      })
-
-      document.getElementById('hostId').innerText =
-        'NOT CONNECTED TO ANYONE'
-    })
-  })
-
-  peer.on('disconnected', () => {
-    console.log('Disconnected from signaller.')
-
-    document.getElementById(
-      'signallerBtn'
-    ).innerText = `✘ DISCONNECTED FROM SIGNALLER. RECONNECT?`
-
-    document.getElementById('signallerBtn').disabled = false
-  })
-
-  peer.on('error', (error) => {
-    console.log(error)
-  })
-
-  function reconnect () {
-    console.log(`Reconnecting to signaller.`)
-    document.getElementById('signallerBtn').disabled = true
-
-    document.getElementById(
-      'signallerBtn'
-    ).innerText = `◌ SEARCHING FOR SIGNALLER...`
-    peer.reconnect()
-  }
-
-  function join () {
-    hostConnection = peer.connect(
-      document.getElementById('hostIdVal').value
-    )
-
-    hostConnection.on('open', () => {
-      console.log(
-        `Connection to ${hostConnection.peer} established.`
-      )
-
-      document.getElementById(
-        'hostId'
-      ).innerText = `CONNECTED TO ${hostConnection.peer}.`
-    })
-
-    hostConnection.on('data', (data) => {
-
-      console.log('Recvied data:\n', data)
-
-      updatePreset(data.sender, data.message)
-
-      updatePeerList(data.peers)
-    })
-
-    hostConnection.on('close', () => {
-      console.log(
-        `Connection to ${hostConnection.peer} is closed.`
-      )
-
-      peer.destroy()
-
-      location.reload()
-    })
-  }
-
-  function updatePreset(id, message) {
-    settings.endPreset = message
-    
-    document.getElementById(
-      'messageBoard'
-    ).innerText += `[${id}]: ${message}\n`
-  }
-
-  function updatePeerList (peerList) {
-    document.getElementById('peerList').innerText = peerList || generatePeerList()
-  }
-
-  function generatePeerList () {
-    return clientConnections
-      .map((connection) => connection.peer)
-      .toList()
-      .push(`${peerId} (HOST)`)
-      .join(', ')
-  }
-
-  function broadcast (data) {
-    clientConnections.forEach((connection) =>
-      connection.send(data)
-    )
-  }
-
-  function send () {
     const data = {
-      sender: peerId,
-      message: document.getElementById('message').value
-    }
+      sender: 'SYSTEM',
+      message: `${connection.peer} joined.`,
+    };
 
-    if (hostConnection) {
-      console.log('SSS' + JSON.stringify(data))
-      hostConnection.send(data)
-    }
+    updatePeerList();
+    updateMessageBoard(data.sender, data.message);
 
-    // host send
-    if (!clientConnections.isEmpty()) {
-      broadcast({
-        ...data,
-        peers: generatePeerList()
-      })
+    broadcast({
+      ...data,
+      peers: generatePeerList(),
+    });
+  });
 
-      updatePreset(data.sender, data.message)
-    }
+  connection.on('data', (data) => {
+    console.log('Recvied data:\n', data, data.message);
+    
+    // host message is set here: 
+    settings.endPreset = data.message
 
-    document.getElementById('message').innerText = ''
+    updateMessageBoard(data.sender, data.message);
+
+    broadcast({
+      ...data,
+      peers: generatePeerList(),
+    });
+  });
+
+  connection.on('close', () => {
+    console.log(`Connection to ${connection.peer} is closed.`);
+    clientConnections = clientConnections.delete(
+      connection.peer.toString(),
+    );
+
+    const data = {
+      sender: 'SYSTEM',
+      message: `${connection.peer} left.`,
+    };
+
+    updatePeerList();
+    updateMessageBoard(data.sender, data.message);
+
+    broadcast({
+      ...data,
+      peers: generatePeerList(),
+    });
+
+    document.getElementById('hostId').innerText =
+      'NOT CONNECTED TO ANYONE';
+  });
+});
+
+peer.on('disconnected', () => {
+  console.log('Disconnected from signaller.');
+
+  document.getElementById(
+    'signallerBtn',
+  ).innerText = `✘ DISCONNECTED FROM SIGNALLER. RECONNECT?`;
+
+  document.getElementById('signallerBtn').disabled = false;
+});
+
+peer.on('error', (error) => {
+  console.log(error);
+});
+
+export function reconnect() {
+  console.log(`Reconnecting to signaller.`);
+  document.getElementById('signallerBtn').disabled = true;
+
+  document.getElementById(
+    'signallerBtn',
+  ).innerText = `◌ SEARCHING FOR SIGNALLER...`;
+  peer.reconnect();
+}
+
+export function join() {
+  hostConnection = peer.connect(
+    document.getElementById('hostIdVal').value,
+  );
+
+  hostConnection.on('open', () => {
+    console.log(
+      `Connection to ${hostConnection.peer} established.`,
+    );
+
+    document.getElementById(
+      'hostId',
+    ).innerText = `CONNECTED TO ${hostConnection.peer}.`;
+  });
+
+  hostConnection.on('data', (data) => {
+    console.log('Recvied data in join func:\n', data);
+
+    // Client message set here
+    settings.endPreset = data.message
+
+    updateMessageBoard(data.sender, data.message);
+
+    updatePeerList(data.peers);
+  });
+
+  hostConnection.on('close', () => {
+    console.log(
+      `Connection to ${hostConnection.peer} is closed.`,
+    );
+
+    peer.destroy();
+
+    location.reload();
+  });
+}
+
+function updateMessageBoard(id, message) {
+  console.log("updateMessageBoard -> message", message)
+  // document.getElementById(
+  //   'messageBoard',
+  // ).innerText += `[${id}]: ${message}\n`;
+
+}
+
+function updatePeerList(peerList) {
+  document.getElementById('peerList').innerText = peerList
+    ? peerList
+    : generatePeerList();
+}
+
+function generatePeerList() {
+  return clientConnections
+    .map((connection) => connection.peer)
+    .toList()
+    .push(`${peerId} (HOST)`)
+    .join(', ');
+}
+
+export function broadcast(data) {
+  clientConnections.forEach((connection) =>
+    connection.send(data),
+  );
+}
+
+export function send(msg) {
+  const data = {
+    sender: peerId,
+    // message: document.getElementById('message').value,
+    message: msg
+  };
+
+  if (hostConnection) {
+    console.log('SSS' + JSON.stringify(data));
+    hostConnection.send(data);
   }
 
-  function clear () {
-    document.getElementById('message').innerText = ''
+  // host send
+  if (!clientConnections.isEmpty()) {
+    broadcast({
+      ...data,
+      peers: generatePeerList(),
+    });
+
+    updateMessageBoard(data.sender, data.message);
   }
 
-  function hide (element) {
-    element.classList.add('hidden')
-  }
+  // document.getElementById('message').innerText = '';
+}
 
-  function show (element) {
-    element.classList.remove('hidden')
-  }
+function clear() {
+  document.getElementById('message').innerText = '';
+}
+
+function hide(element) {
+  element.classList.add('hidden');
+}
+
+function show(element) {
+  element.classList.remove('hidden');
 }

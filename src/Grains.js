@@ -14,7 +14,7 @@ export default class Grains {
     let blended
     let sourceData
     let blendedData
-    const movementIsRunning = true
+ 
 
     const s = (sketch) => {
       sketch.setup = function () {
@@ -45,7 +45,7 @@ export default class Grains {
           }, 200)
         })
 
-        if (movementIsRunning) {
+     
           capture = sketch.createCapture(sketch.VIDEO)
           capture.size(sketch.displayWidth, sketch.displayHeight)
           capture.hide()
@@ -59,16 +59,16 @@ export default class Grains {
           prevFrame.loadPixels()
 
           sketch.frameRate(15)
-        }
+
       }
 
       sketch.draw = function () {
         sketch.clear()
 
-        if (movementIsRunning) {
+     
           getMovement(capture, sourceData, prevFrame, blended)
           checkAreas(blendedData, blended)
-        }
+     
       }
 
       // Comment out temporarily so I can mess with peer-js
@@ -114,7 +114,8 @@ export default class Grains {
         const num = 8
         let isSeen = false
         for (var r = 0; r < num; ++r) {
-          blendedData.copy(blended, 0, 0, sketch.width, sketch.height, 1 / num * r * sketch.width, 0, sketch.width / num, sketch.height)
+          // blendedData.copy(blended, 0, 0, sketch.width, sketch.height, 1 / num * r * sketch.width, 0, sketch.width / num, sketch.height)
+          blendedData.copy(blended, 0, 0, sketch.width, sketch.height, 0, 0, sketch.width , sketch.height)
 
           blendedData.loadPixels()
 
@@ -129,27 +130,20 @@ export default class Grains {
 
           // calculate an average between of the color values of the note area
           average = Math.round(average / (blendedData.pixels.length * 0.25))
-          // TODO: change preset from here
-          // this must be getting reset from somewhere else? 
-          // FIXME: why sometimes can I not click play?
+          
           // TODO: send message from here that changes others presets
-          if (average > 10 && !isSeen) {
+          if (average > 100 && !isSeen) {
             isSeen = true
             sketch.fill(255, 0, 0)
             sketch.rect(1 / num * r * sketch.width, 0, sketch.width / num, sketch.height)
             
-            // granular.startVoice({
-            //   id: ID,
-            //   position: map(r, 0, sketch.width, 0, 1),
-            //   volume: 0.5
-            // })
             settings.endPreset = 'deeper'
+            console.log("Grains -> checkAreas -> settings.endPreset", settings.endPreset)
           } else {
             if (isSeen) {
               isSeen = false
             }
-            settings.endPreset = 'cloud'
-            // granular.stopVoice(ID)
+            console.log("Grains -> checkAreas -> settings.endPreset", settings.endPreset)
           }
         }
       }

@@ -4,12 +4,10 @@ import p5 from 'p5'
 import 'p5/lib/addons/p5.sound'
 import getData from './getData'
 
-// import Waveform from './Waveform'
 import Grains from './Grains'
-// import DragAndDrop from './DragAndDrop'
 import AutoPlay from './AutoPlay'
 
-import {Peers} from './Peers'
+import { peer, send } from './Peers'
 
 const PRESETS = [
   {
@@ -67,7 +65,8 @@ async function loadUserData (data) {
 }
 
 async function loadPreset ({ name, url }) {
-  Peers()
+ 
+
   if (process.ENV === 'development') {
     console.log(`load preset ${name}`)
   }
@@ -157,13 +156,9 @@ async function init () {
 
   compressor.process(reverb, 0.005, 6, 10, -24, 0.05) // [attack], [knee], [ratio], [threshold], [release]
 
-  // const waveform = new Waveform();
 
-  new Grains(granular)
-
-  // granular.on('bufferSet', ({ buffer }) => {
-  //   waveform.draw(buffer);
-  // });
+  // turnoff to test peerjs
+  // new Grains(granular)
 
   autoPlay = new AutoPlay(granular)
 
@@ -185,15 +180,17 @@ async function init () {
   window.addEventListener('keydown', (key) => {
     // space
     if (event.keyCode === 32) {
-      if (autoPlay.isRunning()) {
-        autoPlay.stop()
+      send('cloud')
 
-        pillPlay.textContent = 'Play'
-      } else {
-        autoPlay.start()
+      // if (autoPlay.isRunning()) {
+      //   autoPlay.stop()
 
-        pillPlay.textContent = 'Stop'
-      }
+      //   pillPlay.textContent = 'Play'
+      // } else {
+      //   autoPlay.start()
+
+      //   pillPlay.textContent = 'Stop'
+      // }
     }
   })
 

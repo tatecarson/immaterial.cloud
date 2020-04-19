@@ -9,15 +9,12 @@ import {
 import { map } from './utils'
 
 const Mod = Srl.Transform
-
 const simplex = new SimplexNoise(Math.random)
-
 const ID = 'autoPlay'
 
 export default class AutoPlay {
   constructor (granular) {
     this.granular = granular
-
     this.running = false
   }
 
@@ -33,6 +30,7 @@ export default class AutoPlay {
     const { granular } = this
 
     this.running = true
+    // console.log("AutoPlay -> start -> this.running", this.running)
 
     let x = simplex.noise2D(performance.now() / 10000, 0)
     const palindrome = new Nexus.Sequence(Mod.palindrome([0, 7, 12, 3, 4, 2, 11]))
@@ -44,6 +42,7 @@ export default class AutoPlay {
       volume: 0.5
     })
 
+    // console.log("AutoPlay -> start -> settings.endPreset", settings.endPreset)
     let interpolate = interpolatePresets({
       density: granular.state.density,
       pitch: granular.state.pitch,
@@ -51,12 +50,12 @@ export default class AutoPlay {
       release: granular.state.envelope.release
     }, settings.endPreset, 3000)
 
-    // TODO: then add networking to phones
     // TODO: interaction #3 - presets
     // TODO: play with automating density to get different rhythms of grains
     const run = () => {
       let mode = settings.mode
 
+      // TODO: convert to object literal?
       if (mode === 'interpolate') {
         // run the interpolate settings
         if (interpolate.pitch.position !== interpolate.pitch.values.length - 1) {
@@ -96,7 +95,6 @@ export default class AutoPlay {
 
   stop () {
     this.granular.stopVoice(ID)
-
     this.running = false
   }
 }
