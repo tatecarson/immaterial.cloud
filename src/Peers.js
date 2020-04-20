@@ -148,7 +148,6 @@ export function join() {
     settings.endPreset = data.message
 
     updateMessageBoard(data.sender, data.message);
-
     updatePeerList(data.peers);
   });
 
@@ -187,22 +186,19 @@ export function broadcast(data) {
   );
 }
 
-export function send(msg) {
-  // TODO: this sets a different preset for each clients ID
-  // now you need to do something with that data, 
-  // send it to the other clients to set their presets? 
+export function send() {
+  const data = {
+    sender: peerId,
+    message: ''
+  };
+
   makePresetList().forEach(preset => {
     if (parseInt(preset.peerList) == peerId) {
-      console.log('this is my id')
       settings.endPreset = preset.preset
-      console.log("send -> settings.endPreset", settings.endPreset)
+      data.message = settings.endPreset
     }
   })
 
-  const data = {
-    sender: peerId,
-    message: msg
-  };
 
   if (hostConnection) {
     console.log('SSS' + JSON.stringify(data));

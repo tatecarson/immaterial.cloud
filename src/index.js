@@ -1,15 +1,13 @@
 import Granular from 'granular-js'
-
 import p5 from 'p5'
 import 'p5/lib/addons/p5.sound'
-import getData from './getData'
 
+import getData from './getData'
 import Grains from './Grains'
 import AutoPlay from './AutoPlay'
+import { send } from './Peers'
 
-import { peer, send } from './Peers'
-import { presets as preset } from './presets'
-
+// TODO: rewrite to remove all the dom stuff from granular demo 
 const PRESETS = [
   {
     name: 1,
@@ -77,7 +75,7 @@ async function loadPreset ({ name, url }) {
 
   pillLoading.classList.remove('hidden')
   pillPlay.classList.add('inactive')
-  presets.classList.add('inactive')
+  // presets.classList.add('inactive')
 
   let data
 
@@ -95,7 +93,7 @@ async function loadPreset ({ name, url }) {
 
   pillLoading.classList.add('hidden')
   pillPlay.classList.remove('inactive')
-  presets.classList.remove('inactive')
+  // presets.classList.remove('inactive')
 }
 
 function createPresets (data, text) {
@@ -122,7 +120,7 @@ function createPresets (data, text) {
       loadPreset(preset)
     })
 
-    presets.appendChild(button)
+    // presets.appendChild(button)
   })
 }
 
@@ -177,15 +175,10 @@ async function init () {
     }
   })
 
-  Object.keys(preset).forEach((preset, i) => {
-  console.log("init -> preset", preset)
-    
-    // presetPeerList.push({ preset: preset, peerList: peerList[i] })
-  })
   window.addEventListener('keydown', (key) => {
     // space
     if (event.keyCode === 32) {
-      send('cloud')
+      send()
 
       // if (autoPlay.isRunning()) {
       //   autoPlay.stop()
@@ -201,23 +194,23 @@ async function init () {
 
   createPresets()
 
-  const buttons = Array.from(document.querySelectorAll('#presets .preset'))
+  // const buttons = Array.from(document.querySelectorAll('#presets .preset'))
 
-  buttons.concat([pillPlay]).forEach(element => {
-    [
-      'click',
-      'mousedown',
-      'touchstart'
-    ].forEach(event => {
-      element.addEventListener(event, stopPropagation)
-    })
-  })
+  // buttons.concat([pillPlay]).forEach(element => {
+  //   [
+  //     'click',
+  //     'mousedown',
+  //     'touchstart'
+  //   ].forEach(event => {
+  //     element.addEventListener(event, stopPropagation)
+  //   })
+  // })
 
-  buttons[0].classList.remove('pill-inverted')
+  // buttons[0].classList.remove('pill-inverted')
 
   await loadPreset(PRESETS[0])
 
-  pillPlay.classList.add('animated', 'pulse')
+  // pillPlay.classList.add('animated', 'pulse')
 }
 
 init()

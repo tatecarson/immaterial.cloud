@@ -2,7 +2,7 @@ import p5 from 'p5'
 import 'p5/lib/addons/p5.dom'
 import { differenceAccuracy } from './MotionDetection'
 import { map } from './utils'
-import { settings } from './presets'
+import { send } from './Peers'
 
 const ID = 'grains'
 
@@ -136,16 +136,11 @@ export default class Grains {
             sketch.fill(255, 0, 0)
             sketch.rect(1 / num * r * sketch.width, 0, sketch.width / num, sketch.height)
             
-            settings.endPreset = 'deeper'
-            
-            // TODO: send a message from here 
-            // like: send('cloud')
-            // but tie a preset to a specific phone ID
+            send()
           } else {
             if (isSeen) {
               isSeen = false
             }
-            
           }
         }
       }
