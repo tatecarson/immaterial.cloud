@@ -1,7 +1,7 @@
 import Peer from 'peerjs'
 import { Map } from 'immutable'
 import { randomDigits } from './utils'
-import { settings } from './presets'
+import { settings, presets } from './presets'
 
 var clientConnections = Map({});
 
@@ -9,10 +9,15 @@ var hostConnection;
 
 const peerId = randomDigits(4);
 
-export const peer = new Peer(peerId)
+// export const peer = new Peer(peerId)
+    const peer = new Peer(peerId, {
+      host: 'kfwong-server.herokuapp.com',
+      port: 443,
+      path: '/myapp',
+      secure: true,
+    });
 document.getElementById('hostIdBtn').addEventListener('click', () => join())
 
-// TODO: keep going with this it seems to be working
 peer.on('open', (id) => {
 
   console.log('Connection to signaller establised.');
@@ -30,6 +35,7 @@ peer.on('open', (id) => {
   updatePeerList();
 });
 
+// Runs when another peer connects to this peer 
 peer.on('connection', (connection) => {
   console.log(
     `${connection.peer} attempting to establish connection.`,
@@ -47,11 +53,10 @@ peer.on('connection', (connection) => {
 
     const data = {
       sender: 'SYSTEM',
-      message: `${connection.peer} joined.`,
+      // message: presetPeerList,
     };
 
     updatePeerList();
-    updateMessageBoard(data.sender, data.message);
 
     broadcast({
       ...data,
@@ -159,10 +164,6 @@ export function join() {
 }
 
 function updateMessageBoard(id, message) {
-  console.log("updateMessageBoard -> message", message)
-  // document.getElementById(
-  //   'messageBoard',
-  // ).innerText += `[${id}]: ${message}\n`;
 
 }
 
@@ -187,9 +188,19 @@ export function broadcast(data) {
 }
 
 export function send(msg) {
+  // TODO: this sets a different preset for each clients ID
+  // now you need to do something with that data, 
+  // send it to the other clients to set their presets? 
+  makePresetList().forEach(preset => {
+    if (parseInt(preset.peerList) == peerId) {
+      console.log('this is my id')
+      settings.endPreset = preset.preset
+      console.log("send -> settings.endPreset", settings.endPreset)
+    }
+  })
+
   const data = {
     sender: peerId,
-    // message: document.getElementById('message').value,
     message: msg
   };
 
@@ -207,18 +218,15 @@ export function send(msg) {
 
     updateMessageBoard(data.sender, data.message);
   }
-
-  // document.getElementById('message').innerText = '';
 }
 
-function clear() {
-  document.getElementById('message').innerText = '';
-}
+function makePresetList() {
+  let peerList = generatePeerList().length == 1 ? generatePeerList() : generatePeerList().split(",")
+  let presetPeerList = []
 
-function hide(element) {
-  element.classList.add('hidden');
-}
+  Object.keys(presets).forEach((preset, i) => {
+    presetPeerList.push({ preset: preset, peerList: peerList[i] })
+  })
 
-function show(element) {
-  element.classList.remove('hidden');
+  return presetPeerList
 }

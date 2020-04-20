@@ -8,6 +8,7 @@ import Grains from './Grains'
 import AutoPlay from './AutoPlay'
 
 import { peer, send } from './Peers'
+import { presets as preset } from './presets'
 
 const PRESETS = [
   {
@@ -35,7 +36,6 @@ const pillPlay = document.getElementById('pill-play'),
   presets = document.getElementById('presets')
 
 let autoPlay,
-  dragAndDrop,
   granular
 
 const AUDIO_BUFFER_CACHE = {}
@@ -177,6 +177,11 @@ async function init () {
     }
   })
 
+  Object.keys(preset).forEach((preset, i) => {
+  console.log("init -> preset", preset)
+    
+    // presetPeerList.push({ preset: preset, peerList: peerList[i] })
+  })
   window.addEventListener('keydown', (key) => {
     // space
     if (event.keyCode === 32) {

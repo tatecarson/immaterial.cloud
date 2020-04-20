@@ -131,19 +131,21 @@ export default class Grains {
           // calculate an average between of the color values of the note area
           average = Math.round(average / (blendedData.pixels.length * 0.25))
           
-          // TODO: send message from here that changes others presets
           if (average > 100 && !isSeen) {
             isSeen = true
             sketch.fill(255, 0, 0)
             sketch.rect(1 / num * r * sketch.width, 0, sketch.width / num, sketch.height)
             
             settings.endPreset = 'deeper'
-            console.log("Grains -> checkAreas -> settings.endPreset", settings.endPreset)
+            
+            // TODO: send a message from here 
+            // like: send('cloud')
+            // but tie a preset to a specific phone ID
           } else {
             if (isSeen) {
               isSeen = false
             }
-            console.log("Grains -> checkAreas -> settings.endPreset", settings.endPreset)
+            
           }
         }
       }
