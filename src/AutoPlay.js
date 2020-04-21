@@ -51,23 +51,14 @@ export default class AutoPlay {
       release: granular.state.envelope.release
     }, settings.endPreset, 3000)
 
+    // Now this is totally cooky, it says the correct preset here but i'm not hearing it
+    console.log("AutoPlay -> start -> settings.endPreset", settings.endPreset)
+
     // TODO: update presets without stopping and starting?
     // still not working unless I stop and start again 
     // TODO: interaction #3 - presets
     // TODO: play with automating density to get different rhythms of grains
     const run = () => {
-      // reset interpolate function 
-      // if (isSeen) {
-        
-      //   interpolate = interpolatePresets({
-      //     density: granular.state.density,
-      //     pitch: granular.state.pitch,
-      //     attack: granular.state.envelope.attack,
-      //     release: granular.state.envelope.release
-      //   }, settings.endPreset, 3000)
-      //   console.log("AutoPlay -> run -> settings.endPreset", settings.endPreset)
-      // }
-
       let mode = settings.mode
 
       if (mode === 'interpolate') {

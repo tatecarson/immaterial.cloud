@@ -112,7 +112,7 @@ export default class Grains {
           // Send the peers your preset
           send()
 
-          // TODO: this seems to be working but a little glitchy
+          // TODO: i am not sure that this is resetting the preset
           if (autoPlay.isRunning()) {
             autoPlay.stop()
           } else {

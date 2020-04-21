@@ -2,7 +2,7 @@ import Peer from 'peerjs'
 import { Map } from 'immutable'
 import { randomDigits } from './utils'
 import { settings, presets } from './presets'
-
+import { autoPlay } from './index'
 var clientConnections = Map({})
 
 var hostConnection
@@ -95,9 +95,6 @@ peer.on('connection', (connection) => {
       ...data,
       peers: generatePeerList()
     })
-
-    // document.getElementById('hostId').innerText =
-    //   'NOT CONNECTED TO ANYONE';
   })
 })
 
@@ -134,10 +131,6 @@ export function join () {
     console.log(
       `Connection to ${hostConnection.peer} established.`
     )
-
-    // document.getElementById(
-    //   'hostId',
-    // ).innerText = `CONNECTED TO ${hostConnection.peer}.`;
   })
 
   hostConnection.on('data', (data) => {
@@ -145,6 +138,16 @@ export function join () {
 
     // Client message set here
     settings.endPreset = data.message
+
+    // TODO: this shoudl be setting the preset on the nodes
+    // is this actually happening?
+    // is it because this is not a loop and we're not getting to the start part?
+    console.log("autoPlay.isRunning", autoPlay.isRunning())
+    if (autoPlay.isRunning()) {
+      autoPlay.stop()
+    } else {
+      autoPlay.start()
+    }
 
     updateMessageBoard(data.sender, data.message)
     updatePeerList(data.peers)
