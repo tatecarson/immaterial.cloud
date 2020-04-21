@@ -3,9 +3,11 @@ import 'p5/lib/addons/p5.dom'
 import { differenceAccuracy } from './MotionDetection'
 import { map } from './utils'
 import { send } from './Peers'
+import { autoPlay } from './index'
+
 
 const ID = 'grains'
-
+export let isSeen = true; 
 export default class Grains {
   constructor (granular) {
     let grains = []
@@ -14,8 +16,7 @@ export default class Grains {
     let blended
     let sourceData
     let blendedData
-    let isSeen = false
-
+    
     const s = (sketch) => {
       sketch.setup = function () {
         const canvas = sketch.createCanvas(sketch.windowWidth, sketch.windowHeight)
@@ -61,6 +62,7 @@ export default class Grains {
       }
 
       sketch.draw = function () {
+        // console.log("autoPlay", autoPlay)
         sketch.clear()
 
         getMovement(capture, sourceData, prevFrame, blended)
@@ -104,16 +106,24 @@ export default class Grains {
 
         if (average > 100 && !isSeen) {
           isSeen = true
-          console.log('Grains -> checkAreas -> isSeen', isSeen)
           sketch.fill(255, 0, 0)
           sketch.rect(0, 0, sketch.width, sketch.height)
           
           // Send the peers your preset
           send()
+
+          // TODO: this seems to be working but a little glitchy
+          if (autoPlay.isRunning()) {
+            autoPlay.stop()
+          } else {
+            autoPlay.start()
+          }
+           
         } else {
           if (isSeen) {
             isSeen = false
           }
+
         }
       }
     }

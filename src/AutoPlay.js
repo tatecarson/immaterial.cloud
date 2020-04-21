@@ -1,6 +1,7 @@
 import SimplexNoise from 'simplex-noise'
 import Srl from 'total-serialism/build/ts.es5.min.js'
 import Nexus from 'nexusui'
+import { isSeen } from './Grains'
 
 import {
   settings,
@@ -42,7 +43,7 @@ export default class AutoPlay {
       volume: 0.5
     })
 
-    // console.log("AutoPlay -> start -> settings.endPreset", settings.endPreset)
+    // set the first time
     let interpolate = interpolatePresets({
       density: granular.state.density,
       pitch: granular.state.pitch,
@@ -51,10 +52,22 @@ export default class AutoPlay {
     }, settings.endPreset, 3000)
 
     // TODO: update presets without stopping and starting?
-    // theres an issue that you get multiple triggers from each phone that you need to solve for somehow
+    // still not working unless I stop and start again 
     // TODO: interaction #3 - presets
     // TODO: play with automating density to get different rhythms of grains
     const run = () => {
+      // reset interpolate function 
+      // if (isSeen) {
+        
+      //   interpolate = interpolatePresets({
+      //     density: granular.state.density,
+      //     pitch: granular.state.pitch,
+      //     attack: granular.state.envelope.attack,
+      //     release: granular.state.envelope.release
+      //   }, settings.endPreset, 3000)
+      //   console.log("AutoPlay -> run -> settings.endPreset", settings.endPreset)
+      // }
+
       let mode = settings.mode
 
       if (mode === 'interpolate') {

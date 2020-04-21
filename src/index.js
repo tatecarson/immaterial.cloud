@@ -33,7 +33,7 @@ const pillPlay = document.getElementById('pill-play'),
   canvases = document.getElementById('canvases'),
   presets = document.getElementById('presets')
 
-let autoPlay,
+export let autoPlay,
   granular
 
 const AUDIO_BUFFER_CACHE = {}
