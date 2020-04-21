@@ -63,6 +63,9 @@ gui.add(settings, 'mode', ['interpolate', 'preset'])
 gui.add(settings, 'endPreset')
 gui.remember(settings)
 
+// hide for performance
+gui.hide()
+
 export const presets = gui.load.remembered
 
 // interpolate from current position to the endPreset over n steps

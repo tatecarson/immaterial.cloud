@@ -2,10 +2,15 @@ import Granular from 'granular-js'
 import p5 from 'p5'
 import 'p5/lib/addons/p5.sound'
 
+import VConsole from 'vconsole'
+
 import getData from './getData'
 import Grains from './Grains'
 import AutoPlay from './AutoPlay'
 import { send } from './Peers'
+
+
+const vConsole = new VConsole()
 
 // TODO: rewrite to remove all the dom stuff from granular demo
 const PRESETS = [
