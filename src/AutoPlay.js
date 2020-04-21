@@ -50,12 +50,13 @@ export default class AutoPlay {
       release: granular.state.envelope.release
     }, settings.endPreset, 3000)
 
+    // TODO: update presets without stopping and starting?
+    // theres an issue that you get multiple triggers from each phone that you need to solve for somehow
     // TODO: interaction #3 - presets
     // TODO: play with automating density to get different rhythms of grains
     const run = () => {
       let mode = settings.mode
 
-      // TODO: convert to object literal?
       if (mode === 'interpolate') {
         // run the interpolate settings
         if (interpolate.pitch.position !== interpolate.pitch.values.length - 1) {

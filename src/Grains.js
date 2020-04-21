@@ -14,7 +14,7 @@ export default class Grains {
     let blended
     let sourceData
     let blendedData
- 
+    let isSeen = false
 
     const s = (sketch) => {
       sketch.setup = function () {
@@ -45,51 +45,27 @@ export default class Grains {
           }, 200)
         })
 
-     
-          capture = sketch.createCapture(sketch.VIDEO)
-          capture.size(sketch.displayWidth, sketch.displayHeight)
-          capture.hide()
+        capture = sketch.createCapture(sketch.VIDEO)
+        capture.size(sketch.displayWidth, sketch.displayHeight)
+        capture.hide()
 
-          sourceData = sketch.createImage(sketch.width, sketch.height)
-          prevFrame = sketch.createImage(sketch.width, sketch.height)
-          blended = sketch.createImage(sketch.width, sketch.height)
-          blendedData = sketch.createImage(sketch.width, sketch.height)
-          sourceData.loadPixels()
-          blended.loadPixels()
-          prevFrame.loadPixels()
+        sourceData = sketch.createImage(sketch.width, sketch.height)
+        prevFrame = sketch.createImage(sketch.width, sketch.height)
+        blended = sketch.createImage(sketch.width, sketch.height)
+        blendedData = sketch.createImage(sketch.width, sketch.height)
+        sourceData.loadPixels()
+        blended.loadPixels()
+        prevFrame.loadPixels()
 
-          sketch.frameRate(15)
-
+        sketch.frameRate(15)
       }
 
       sketch.draw = function () {
         sketch.clear()
 
-     
-          getMovement(capture, sourceData, prevFrame, blended)
-          checkAreas(blendedData, blended)
-     
+        getMovement(capture, sourceData, prevFrame, blended)
+        checkAreas(blendedData, blended)
       }
-
-      // Comment out temporarily so I can mess with peer-js
-      // sketch.mousePressed = function () {
-      //   granular.startVoice({
-      //     id: ID,
-      //     position: map(sketch.mouseX, 0, sketch.width, 0, 1),
-      //     volume: 0.5
-      //   })
-      // }
-
-      // sketch.mouseDragged = function () {
-      //   granular.updateVoice(ID, {
-      //     position: map(sketch.mouseX, 0, sketch.width, 0, 1),
-      //     volume: 0.5
-      //   })
-      // }
-
-      // sketch.mouseReleased = function () {
-      //   granular.stopVoice(ID)
-      // }
 
       sketch.windowResized = function () {
         sketch.resizeCanvas(sketch.windowWidth, sketch.windowHeight)
@@ -110,37 +86,33 @@ export default class Grains {
       }
 
       function checkAreas (blendedData, blended) {
-        // loop over the note areas
-        const num = 8
-        let isSeen = false
-        for (var r = 0; r < num; ++r) {
-          // blendedData.copy(blended, 0, 0, sketch.width, sketch.height, 1 / num * r * sketch.width, 0, sketch.width / num, sketch.height)
-          blendedData.copy(blended, 0, 0, sketch.width, sketch.height, 0, 0, sketch.width , sketch.height)
+        blendedData.copy(blended, 0, 0, sketch.width, sketch.height, 0, 0, sketch.width, sketch.height)
+        blendedData.loadPixels()
 
-          blendedData.loadPixels()
+        var i = 0
+        var average = 0
+        // loop over the pixels
+        let amount = 1
+        while (i < (blendedData.pixels.length * 0.25)) {
+          // make an average between the color channel
+          average += (blendedData.pixels[i * amount] + blendedData.pixels[i * amount + 1] + blendedData.pixels[i * amount + 2]) / 3
+          ++i
+        }
 
-          var i = 0
-          var average = 0
-          // loop over the pixels
-          while (i < (blendedData.pixels.length * 0.25)) {
-            // make an average between the color channel
-            average += (blendedData.pixels[i * 4] + blendedData.pixels[i * 4 + 1] + blendedData.pixels[i * 4 + 2]) / 3
-            ++i
-          }
+        // calculate an average between of the color values of the note area
+        average = Math.round(average / (blendedData.pixels.length * 0.25))
 
-          // calculate an average between of the color values of the note area
-          average = Math.round(average / (blendedData.pixels.length * 0.25))
+        if (average > 100 && !isSeen) {
+          isSeen = true
+          console.log('Grains -> checkAreas -> isSeen', isSeen)
+          sketch.fill(255, 0, 0)
+          sketch.rect(0, 0, sketch.width, sketch.height)
           
-          if (average > 100 && !isSeen) {
-            isSeen = true
-            sketch.fill(255, 0, 0)
-            sketch.rect(1 / num * r * sketch.width, 0, sketch.width / num, sketch.height)
-            
-            send()
-          } else {
-            if (isSeen) {
-              isSeen = false
-            }
+          // Send the peers your preset
+          send()
+        } else {
+          if (isSeen) {
+            isSeen = false
           }
         }
       }

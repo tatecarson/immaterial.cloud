@@ -7,7 +7,7 @@ import Grains from './Grains'
 import AutoPlay from './AutoPlay'
 import { send } from './Peers'
 
-// TODO: rewrite to remove all the dom stuff from granular demo 
+// TODO: rewrite to remove all the dom stuff from granular demo
 const PRESETS = [
   {
     name: 1,
@@ -63,8 +63,6 @@ async function loadUserData (data) {
 }
 
 async function loadPreset ({ name, url }) {
- 
-
   if (process.ENV === 'development') {
     console.log(`load preset ${name}`)
   }
@@ -154,9 +152,8 @@ async function init () {
 
   compressor.process(reverb, 0.005, 6, 10, -24, 0.05) // [attack], [knee], [ratio], [threshold], [release]
 
-
   // turnoff to test peerjs
-  // new Grains(granular)
+  new Grains(granular)
 
   autoPlay = new AutoPlay(granular)
 
