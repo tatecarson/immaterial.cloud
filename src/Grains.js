@@ -20,10 +20,9 @@ export default class Grains {
     const s = (sketch) => {
       sketch.setup = function () {
         const canvas = sketch.createCanvas(sketch.windowWidth, sketch.windowHeight)
-        // const canvas = sketch.createCanvas(0, 0)
         canvas.parent('canvases')
 
-        sketch.rectMode(sketch.CENTER)
+        // sketch.rectMode(sketch.CENTER)
         sketch.ellipseMode(sketch.CENTER)
         sketch.fill('#FFF')
         sketch.stroke('blue')
@@ -48,9 +47,12 @@ export default class Grains {
 
         capture = sketch.createCapture(sketch.VIDEO)
         capture.size(sketch.displayWidth, sketch.displayHeight)
+        console.log("Grains -> sketch.setup -> sketch.displayWidth, sketch.displayHeight", sketch.displayWidth, sketch.displayHeight)
+        
         capture.hide()
 
         sourceData = sketch.createImage(sketch.width, sketch.height)
+        console.log("Grains -> sketch.setup -> sketch.width, sketch.height", sketch.width, sketch.height)
         prevFrame = sketch.createImage(sketch.width, sketch.height)
         blended = sketch.createImage(sketch.width, sketch.height)
         blendedData = sketch.createImage(sketch.width, sketch.height)
@@ -62,7 +64,6 @@ export default class Grains {
       }
 
       sketch.draw = function () {
-        // console.log("autoPlay", autoPlay)
         sketch.clear()
 
         getMovement(capture, sourceData, prevFrame, blended)
@@ -94,7 +95,7 @@ export default class Grains {
         var i = 0
         var average = 0
         // loop over the pixels
-        let amount = 1
+        let amount = 4
         while (i < (blendedData.pixels.length * 0.25)) {
           // make an average between the color channel
           average += (blendedData.pixels[i * amount] + blendedData.pixels[i * amount + 1] + blendedData.pixels[i * amount + 2]) / 3
