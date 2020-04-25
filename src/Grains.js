@@ -1,7 +1,7 @@
 import p5 from 'p5'
 import 'p5/lib/addons/p5.dom'
 import { differenceAccuracy } from './MotionDetection'
-import { map } from './utils'
+import { map, resetPreset } from './utils'
 import { send } from './Peers'
 import { autoPlay } from './index'
 
@@ -46,13 +46,10 @@ export default class Grains {
         })
 
         capture = sketch.createCapture(sketch.VIDEO)
-        capture.size(sketch.displayWidth, sketch.displayHeight)
-        console.log("Grains -> sketch.setup -> sketch.displayWidth, sketch.displayHeight", sketch.displayWidth, sketch.displayHeight)
-        
+        capture.size(sketch.displayWidth, sketch.displayHeight)        
         capture.hide()
 
         sourceData = sketch.createImage(sketch.width, sketch.height)
-        console.log("Grains -> sketch.setup -> sketch.width, sketch.height", sketch.width, sketch.height)
         prevFrame = sketch.createImage(sketch.width, sketch.height)
         blended = sketch.createImage(sketch.width, sketch.height)
         blendedData = sketch.createImage(sketch.width, sketch.height)
@@ -112,19 +109,11 @@ export default class Grains {
           
           // Send the peers your preset
           send()
-
-          // TODO: i am not sure that this is resetting the preset
-          if (autoPlay.isRunning()) {
-            autoPlay.stop()
-          } else {
-            autoPlay.start()
-          }
-           
+					resetPreset()           
         } else {
           if (isSeen) {
             isSeen = false
           }
-
         }
       }
     }

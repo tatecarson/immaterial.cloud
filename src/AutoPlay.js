@@ -43,7 +43,8 @@ export default class AutoPlay {
       volume: 0.5
     })
 
-    // set the first time
+		// set the first time
+		// TODO: make the time randomly choose been [500, 1000, 2000, 3000]
     let interpolate = interpolatePresets({
       density: granular.state.density,
       pitch: granular.state.pitch,
@@ -51,12 +52,6 @@ export default class AutoPlay {
       release: granular.state.envelope.release
     }, settings.endPreset, 3000)
 
-    // Now this is totally cooky, it says the correct preset here but i'm not hearing it
-    console.log("AutoPlay -> start -> settings.endPreset", settings.endPreset)
-
-    // TODO: update presets without stopping and starting?
-    // still not working unless I stop and start again 
-    // TODO: interaction #3 - presets
     // TODO: play with automating density to get different rhythms of grains
     const run = () => {
       let mode = settings.mode
@@ -86,7 +81,8 @@ export default class AutoPlay {
       }
 
       granular.updateVoice(ID, {
-        position: map(palindrome.next(), 0, 12, 0, 1),
+		    position: map(palindrome.next(), 0, 12, 0, 1),
+		    //TODO: add automation to the volume 
         volume: 0.5
       })
 

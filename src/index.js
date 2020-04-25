@@ -7,7 +7,7 @@ import VConsole from 'vconsole'
 import getData from './getData'
 import Grains from './Grains'
 import AutoPlay from './AutoPlay'
-import { send } from './Peers'
+import { send, reconnect } from './Peers'
 
 
 const vConsole = new VConsole()
@@ -156,7 +156,7 @@ async function init () {
   const compressor = new p5.Compressor()
 
   compressor.process(reverb, 0.005, 6, 10, -24, 0.05) // [attack], [knee], [ratio], [threshold], [release]
-
+	
   // turnoff to test peerjs
   new Grains(granular)
 

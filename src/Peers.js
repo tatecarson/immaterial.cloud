@@ -1,8 +1,8 @@
 import Peer from 'peerjs'
 import { Map } from 'immutable'
-import { randomDigits } from './utils'
+import { randomDigits, resetPreset } from './utils'
 import { settings, presets } from './presets'
-import { autoPlay } from './index'
+// import { autoPlay } from './index'
 var clientConnections = Map({})
 
 var hostConnection
@@ -55,7 +55,7 @@ peer.on('connection', (connection) => {
       // message: presetPeerList,
     }
 
-    updatePeerList()
+		updatePeerList()
 
     broadcast({
       ...data,
@@ -68,9 +68,8 @@ peer.on('connection', (connection) => {
 
     // host message is set here:
     settings.endPreset = data.message
-
-    updateMessageBoard(data.sender, data.message)
-
+		resetPreset()
+    
     broadcast({
       ...data,
       peers: generatePeerList()
@@ -89,8 +88,7 @@ peer.on('connection', (connection) => {
     }
 
     updatePeerList()
-    updateMessageBoard(data.sender, data.message)
-
+    
     broadcast({
       ...data,
       peers: generatePeerList()
@@ -135,22 +133,10 @@ export function join () {
 
   hostConnection.on('data', (data) => {
     console.log('Recvied data in join func:\n', data)
-
-    // Client message set here
+		
     settings.endPreset = data.message
-
-    // TODO: this shoudl be setting the preset on the nodes
-    // is this actually happening?
-    // is it because this is not a loop and we're not getting to the start part?
-    console.log("autoPlay.isRunning", autoPlay.isRunning())
-    if (autoPlay.isRunning()) {
-      autoPlay.stop()
-    } else {
-      autoPlay.start()
-    }
-
-    updateMessageBoard(data.sender, data.message)
-    updatePeerList(data.peers)
+   	resetPreset()
+		updatePeerList(data.peers)
   })
 
   hostConnection.on('close', () => {
@@ -164,11 +150,7 @@ export function join () {
   })
 }
 
-function updateMessageBoard (id, message) {
-
-}
-
-function updatePeerList (peerList) {
+function updatePeerList(peerList) {
   document.getElementById('peerList').innerText = peerList || generatePeerList()
 }
 
@@ -180,7 +162,7 @@ function generatePeerList () {
     .join(', ')
 }
 
-export function broadcast (data) {
+export function broadcast(data) {
   clientConnections.forEach((connection) =>
     connection.send(data)
   )
@@ -192,12 +174,13 @@ export function send () {
     message: ''
   }
 
-  makePresetList().forEach(preset => {
-    if (parseInt(preset.peerList) == peerId) {
-      settings.endPreset = preset.preset
-      data.message = settings.endPreset
-    }
-  })
+	// working>
+	makePresetList().forEach(preset => {
+		if (parseInt(preset.peerList) == peerId) {
+			settings.endPreset = preset.preset
+			data.message = settings.endPreset
+		}
+	})
 
   if (hostConnection) {
     console.log('SSS' + JSON.stringify(data))
@@ -210,11 +193,12 @@ export function send () {
       ...data,
       peers: generatePeerList()
     })
-
-    updateMessageBoard(data.sender, data.message)
   }
 }
 
+// FIXME: two phones gave me the same preset 
+	// TODO: check out this function for preset duplication issue
+	// peerList is undefined 
 function makePresetList () {
   let peerList = generatePeerList().length == 1 ? generatePeerList() : generatePeerList().split(',')
   let presetPeerList = []
@@ -225,3 +209,4 @@ function makePresetList () {
 
   return presetPeerList
 }
+

@@ -1,4 +1,17 @@
-export function map (value, inMin, inMax, outMin, outMax) {
+import { autoPlay } from './index'
+
+export function resetPreset() {
+	if (autoPlay.isRunning()) {
+		autoPlay.stop()
+
+		//then start a millisecond later 
+		setTimeout(() => autoPlay.start(), 10)
+	} else {
+		autoPlay.start()
+	}
+}
+
+export function map(value, inMin, inMax, outMin, outMax) {
   return (value - inMin) * (outMax - outMin) / (inMax - inMin) + outMin
 }
 
