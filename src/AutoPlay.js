@@ -10,6 +10,7 @@ import { map } from './utils'
 
 const Mod = Srl.Transform
 const Rand = Srl.Stochastic
+const Algo = Srl.Algorithmic
 const simplex = new SimplexNoise(Math.random)
 const ID = 'autoPlay'
 
@@ -34,7 +35,7 @@ export default class AutoPlay {
 
     let x = simplex.noise2D(performance.now() / 10000, 0)
     const palindrome = new Nexus.Sequence(Mod.palindrome([0, 7, 12, 3, 4, 2, 11]))
-    // const dice = new Nexus.Sequence(Rand.dice(10))
+		const density = new Nexus.Sequence(Algo.euclid(16, 9, 1))
 
     granular.startVoice({
       id: ID,
@@ -50,7 +51,6 @@ export default class AutoPlay {
       release: granular.state.envelope.release
 		}, settings.endPreset, time)
 
-    // TODO: play with automating density to get different rhythms of grains
     const run = () => {
       let mode = settings.mode
 
@@ -76,7 +76,12 @@ export default class AutoPlay {
             release: settings.attack
           }
         })
-      }
+			}
+			
+			// set to 0 and 1 to turn on and off, makes phrases 
+			granular.set({
+				density: density.next()
+			})
 
       granular.updateVoice(ID, {
 		    position: map(palindrome.next(), 0, 12, 0, 1),

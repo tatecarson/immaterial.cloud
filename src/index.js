@@ -13,7 +13,7 @@ import { send, reconnect } from './Peers'
 const vConsole = new VConsole()
 
 // TODO: rewrite to remove all the dom stuff from granular demo
-// TODO: add more sounds, randomly schedule changes from one sound to the other 
+// TODO: add more sounds
 const PRESETS = [
   {
     name: 1,
@@ -21,7 +21,7 @@ const PRESETS = [
   },
   {
     name: '2',
-    url: 'samples/doit2.wav'
+    url: 'samples/clipsmall.mp3'
   },
   {
     name: 3,
@@ -71,34 +71,6 @@ async function loadPreset ({ name, url }) {
   pillLoading.classList.add('hidden')
   pillPlay.classList.remove('inactive')
   // presets.classList.remove('inactive')
-}
-
-function createPresets (data, text) {
-  PRESETS.forEach((preset) => {
-    const { name } = preset
-
-    const button = document.createElement('div')
-
-    button.classList.add('preset', 'pill', 'pill-inverted', 'pill-button')
-
-    button.textContent = name
-
-    button.addEventListener('click', () => {
-      const buttons = Array.from(document.querySelectorAll('#presets .preset'))
-
-      buttons.forEach((b) => {
-        if (button === b) {
-          b.classList.remove('pill-inverted')
-        } else {
-          b.classList.add('pill-inverted')
-        }
-      })
-
-      loadPreset(preset)
-    })
-
-    // presets.appendChild(button)
-  })
 }
 
 async function init () {
@@ -157,9 +129,9 @@ async function init () {
       send()
     }
   })
-
-  createPresets()
-  await loadPreset(PRESETS[0])
+	
+	// TODO: get this to switch between sounds, its currently only doing it at the start
+	setInterval(await loadPreset(PRESETS[Math.round(Math.random())], 5000))
 }
 
 init()

@@ -75,7 +75,9 @@ export function interpolatePresets (startValue, endPreset, steps) {
 	
   Object.keys(end).forEach(setting => {
     if (setting === 'pitch') {
-      preset.pitch = new Nexus.Sequence(spreadInclusiveFloat(steps, startValue.pitch, end[setting]))
+			preset.pitch = new Nexus.Sequence(spreadInclusiveFloat(steps, startValue.pitch, end[setting]))
+			// TODO: choose from different modes here 
+			// normal, drunk or random
     } else if (setting === 'density') {
       preset.density = new Nexus.Sequence(spreadInclusiveFloat(steps, startValue.density, end[setting]))
     } else if (setting === 'attack') {
