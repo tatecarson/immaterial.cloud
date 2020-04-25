@@ -1,7 +1,6 @@
 import SimplexNoise from 'simplex-noise'
 import Srl from 'total-serialism/build/ts.es5.min.js'
 import Nexus from 'nexusui'
-import { isSeen } from './Grains'
 
 import {
   settings,
@@ -10,6 +9,7 @@ import {
 import { map } from './utils'
 
 const Mod = Srl.Transform
+const Rand = Srl.Stochastic
 const simplex = new SimplexNoise(Math.random)
 const ID = 'autoPlay'
 
@@ -31,7 +31,6 @@ export default class AutoPlay {
     const { granular } = this
 
     this.running = true
-    // console.log("AutoPlay -> start -> this.running", this.running)
 
     let x = simplex.noise2D(performance.now() / 10000, 0)
     const palindrome = new Nexus.Sequence(Mod.palindrome([0, 7, 12, 3, 4, 2, 11]))
@@ -39,18 +38,17 @@ export default class AutoPlay {
 
     granular.startVoice({
       id: ID,
-      position: map(x, -1, 1, 0, 1),
-      volume: 0.5
+      position: 0
     })
 
 		// set the first time
-		// TODO: make the time randomly choose been [500, 1000, 2000, 3000]
+		let time = Rand.choose(1, [10, 500, 1000, 2000, 3000])[0]
     let interpolate = interpolatePresets({
       density: granular.state.density,
       pitch: granular.state.pitch,
       attack: granular.state.envelope.attack,
       release: granular.state.envelope.release
-    }, settings.endPreset, 3000)
+		}, settings.endPreset, time)
 
     // TODO: play with automating density to get different rhythms of grains
     const run = () => {
@@ -82,11 +80,10 @@ export default class AutoPlay {
 
       granular.updateVoice(ID, {
 		    position: map(palindrome.next(), 0, 12, 0, 1),
-		    //TODO: add automation to the volume 
-        volume: 0.5
+				volume: map(palindrome.next(), 0, 12, 0, 1)
       })
 
-      if (this.running) {
+			if (this.running) {
         setTimeout(run)
       }
     }

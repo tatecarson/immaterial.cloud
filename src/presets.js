@@ -72,8 +72,8 @@ export const presets = gui.load.remembered
 export function interpolatePresets (startValue, endPreset, steps) {
   let preset = {}
   let end = presets[endPreset][0]
-
-  Object.keys(end).forEach((setting, i) => {
+	
+  Object.keys(end).forEach(setting => {
     if (setting === 'pitch') {
       preset.pitch = new Nexus.Sequence(spreadInclusiveFloat(steps, startValue.pitch, end[setting]))
     } else if (setting === 'density') {

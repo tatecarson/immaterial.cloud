@@ -13,6 +13,7 @@ import { send, reconnect } from './Peers'
 const vConsole = new VConsole()
 
 // TODO: rewrite to remove all the dom stuff from granular demo
+// TODO: add more sounds, randomly schedule changes from one sound to the other 
 const PRESETS = [
   {
     name: 1,
@@ -33,39 +34,12 @@ const PRESETS = [
 ]
 
 const pillPlay = document.getElementById('pill-play'),
-  pillLoading = document.getElementById('pill-loading'),
-  pillTitle = document.getElementById('pill-title'),
-  canvases = document.getElementById('canvases'),
-  presets = document.getElementById('presets')
+  pillLoading = document.getElementById('pill-loading')
 
 export let autoPlay,
   granular
 
 const AUDIO_BUFFER_CACHE = {}
-
-function stopPropagation (event) {
-  event.stopPropagation()
-}
-
-async function loadUserData (data) {
-  autoPlay.stop()
-
-  pillPlay.textContent = 'Play'
-
-  pillLoading.classList.remove('hidden')
-  pillPlay.classList.add('inactive')
-  presets.classList.add('inactive')
-
-  const buttons = Array.from(document.querySelectorAll('#presets .preset'))
-
-  buttons.forEach(b => b.classList.add('pill-inverted'))
-
-  await granular.setBuffer(data)
-
-  pillLoading.classList.add('hidden')
-  pillPlay.classList.remove('inactive')
-  presets.classList.remove('inactive')
-}
 
 async function loadPreset ({ name, url }) {
   if (process.ENV === 'development') {
@@ -181,38 +155,11 @@ async function init () {
     // space
     if (event.keyCode === 32) {
       send()
-
-      // if (autoPlay.isRunning()) {
-      //   autoPlay.stop()
-
-      //   pillPlay.textContent = 'Play'
-      // } else {
-      //   autoPlay.start()
-
-      //   pillPlay.textContent = 'Stop'
-      // }
     }
   })
 
   createPresets()
-
-  // const buttons = Array.from(document.querySelectorAll('#presets .preset'))
-
-  // buttons.concat([pillPlay]).forEach(element => {
-  //   [
-  //     'click',
-  //     'mousedown',
-  //     'touchstart'
-  //   ].forEach(event => {
-  //     element.addEventListener(event, stopPropagation)
-  //   })
-  // })
-
-  // buttons[0].classList.remove('pill-inverted')
-
   await loadPreset(PRESETS[0])
-
-  // pillPlay.classList.add('animated', 'pulse')
 }
 
 init()

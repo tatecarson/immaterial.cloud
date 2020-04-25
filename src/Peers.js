@@ -196,9 +196,6 @@ export function send () {
   }
 }
 
-// FIXME: two phones gave me the same preset 
-	// TODO: check out this function for preset duplication issue
-	// peerList is undefined 
 function makePresetList () {
   let peerList = generatePeerList().length == 1 ? generatePeerList() : generatePeerList().split(',')
   let presetPeerList = []
