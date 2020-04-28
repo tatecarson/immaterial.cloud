@@ -7,8 +7,8 @@ import VConsole from 'vconsole'
 import getData from './getData'
 import Grains from './Grains'
 import AutoPlay from './AutoPlay'
-import { send, reconnect } from './Peers'
-
+import { send } from './Peers'
+import { delay, reverb } from './processing'
 
 const vConsole = new VConsole()
 
@@ -87,21 +87,17 @@ async function init () {
     pitch: 1
   })
 
-  const delay = new p5.Delay()
+	delay.process(granular, 0.5, 0.7, 1000) // source, delayTime, feedback, filter frequency
 
-  delay.process(granular, 0, 0.5, 3000) // source, delayTime, feedback, filter frequency
+	// due to a bug setting parameters will throw error
+	// https://github.com/processing/p5.js/issues/3090
+	reverb.process(delay) // source, reverbTime, decayRate in %, reverse
 
-  const reverb = new p5.Reverb()
+	reverb.amp(0.2)
 
-  // due to a bug setting parameters will throw error
-  // https://github.com/processing/p5.js/issues/3090
-  reverb.process(delay) // source, reverbTime, decayRate in %, reverse
+	const compressor = new p5.Compressor()
 
-  reverb.amp(1)
-
-  const compressor = new p5.Compressor()
-
-  compressor.process(reverb, 0.005, 6, 10, -24, 0.05) // [attack], [knee], [ratio], [threshold], [release]
+	compressor.process(reverb, 0.005, 6, 10, -24, 0.05) // [attack], [knee], [ratio], [threshold], [release]
 	
   // turnoff to test peerjs
   new Grains(granular)
@@ -130,7 +126,6 @@ async function init () {
     }
   })
 	
-	// TODO: get this to switch between sounds, its currently only doing it at the start
 	setInterval(await loadPreset(PRESETS[Math.round(Math.random())], 5000))
 }
 

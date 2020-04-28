@@ -1,4 +1,3 @@
-import SimplexNoise from 'simplex-noise'
 import Srl from 'total-serialism/build/ts.es5.min.js'
 import Nexus from 'nexusui'
 
@@ -7,17 +6,23 @@ import {
   interpolatePresets
 } from './presets'
 import { map } from './utils'
+import { delay } from './processing'
 
 const Mod = Srl.Transform
 const Rand = Srl.Stochastic
-const Algo = Srl.Algorithmic
-const simplex = new SimplexNoise(Math.random)
+const Gen = Srl.Generative
+const Util = Srl.Utility
+const Algo = Srl.Algorithmic 
+
 const ID = 'autoPlay'
 
 export default class AutoPlay {
   constructor (granular) {
     this.granular = granular
-    this.running = false
+		this.running = false
+
+		this.density = new Nexus.Sequence(Util.add(Algo.euclid(16, 5), Algo.euclid(11, 3, 2)))
+		this.delaySet = new Nexus.Sequence(Util.map(Gen.sine(20), 0, 20, 0, 1))
   }
 
   isRunning () {
@@ -33,10 +38,10 @@ export default class AutoPlay {
 
     this.running = true
 
-    let x = simplex.noise2D(performance.now() / 10000, 0)
-    const palindrome = new Nexus.Sequence(Mod.palindrome([0, 7, 12, 3, 4, 2, 11]))
-		const density = new Nexus.Sequence(Algo.euclid(16, 9, 1))
+		const palindrome = new Nexus.Sequence(Mod.palindrome([0, 7, 12, 3, 4, 2, 11]))
 
+		delay.drywet(this.delaySet.next())
+		
     granular.startVoice({
       id: ID,
       position: 0
@@ -80,14 +85,14 @@ export default class AutoPlay {
 			
 			// set to 0 and 1 to turn on and off, makes phrases 
 			granular.set({
-				density: density.next()
+				density: this.density.next()
 			})
-
+		
       granular.updateVoice(ID, {
 		    position: map(palindrome.next(), 0, 12, 0, 1),
 				volume: map(palindrome.next(), 0, 12, 0, 1)
       })
-
+			
 			if (this.running) {
         setTimeout(run)
       }
