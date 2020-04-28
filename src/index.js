@@ -13,23 +13,22 @@ import { delay, reverb } from './processing'
 const vConsole = new VConsole()
 
 // TODO: rewrite to remove all the dom stuff from granular demo
-// TODO: add more sounds
 const PRESETS = [
   {
     name: 1,
-    url: 'samples/ringTones.wav'
+    url: 'samples/ringTones.mp3'
   },
   {
-    name: '2',
-    url: 'samples/clipsmall.mp3'
+    name: 2,
+    url: 'samples/bassDrone.mp3'
   },
   {
     name: 3,
-    url: 'samples/four1.wav'
+    url: 'samples/musicBoxEdit.mp3'
   },
   {
     name: 4,
-    url: 'samples/gotit1.wav'
+    url: 'samples/bellsEdit.mp3'
   }
 ]
 
@@ -126,7 +125,8 @@ async function init () {
     }
   })
 	
-	setInterval(await loadPreset(PRESETS[Math.round(Math.random())], 5000))
+	await loadPreset(PRESETS[3])
+	// setInterval(await loadPreset(PRESETS[Math.round(Math.random())], 5000))
 }
 
 init()

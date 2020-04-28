@@ -84,9 +84,9 @@ export default class AutoPlay {
 			}
 			
 			// set to 0 and 1 to turn on and off, makes phrases 
-			granular.set({
-				density: this.density.next()
-			})
+			// granular.set({
+			// 	density: this.density.next()
+			// })
 		
       granular.updateVoice(ID, {
 		    position: map(palindrome.next(), 0, 12, 0, 1),

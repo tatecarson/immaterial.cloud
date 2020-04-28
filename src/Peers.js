@@ -2,7 +2,6 @@ import Peer from 'peerjs'
 import { Map } from 'immutable'
 import { randomDigits, resetPreset } from './utils'
 import { settings, presets } from './presets'
-// import { autoPlay } from './index'
 var clientConnections = Map({})
 
 var hostConnection
@@ -175,6 +174,7 @@ export function send () {
   }
 
 	// working>
+	// TODO: tell every peer to use the same instrument 
 	makePresetList().forEach(preset => {
 		if (parseInt(preset.peerList) == peerId) {
 			settings.endPreset = preset.preset

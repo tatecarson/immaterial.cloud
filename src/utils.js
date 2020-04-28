@@ -38,5 +38,3 @@ Number.prototype.pad = function (size) {
 export function randomDigits (length) {
   return Math.floor(100000 + Math.random() * 900000).pad(length)
 }
-
-console.log(randomDigits(6))

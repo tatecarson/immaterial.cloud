@@ -6,14 +6,6 @@ export const gui = new dat.GUI({
   load: {
     'preset': 'cloud',
     'remembered': {
-      'preset1': {
-        '0': {
-          'pitch': 5.331566469093988,
-          'attack': 0.8720000000000002,
-          'release': 1.320000000000001,
-          'density': 0.6591024555461473
-        }
-      },
       'deeper': {
         '0': {
           'pitch': 0.7274682472480949,
@@ -35,11 +27,17 @@ export const gui = new dat.GUI({
           'pitch': 2.727468247248095,
           'attack': 0.05199999999999981,
           'release': 1.320000000000001,
-          'density': 0.7,
-          'mode': 'interpolate',
-          'endPreset': 'cloud'
+          'density': 0.7
         }
-      }
+			}, 
+			"very-sparse": {
+				"0": {
+					"pitch": 0.47168501270110075,
+					"attack": 0.05199999999999981,
+					"release": 0.01860338696020322,
+					"density": 0.0001
+				}
+			}
     },
     'closed': false,
     'folders': {}
