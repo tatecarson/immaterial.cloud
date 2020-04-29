@@ -13,7 +13,7 @@ import { delay, reverb } from './processing'
 const vConsole = new VConsole()
 
 // TODO: rewrite to remove all the dom stuff from granular demo
-const PRESETS = [
+export const PRESETS = [
   {
     name: 1,
     url: 'samples/ringTones.mp3'
@@ -40,7 +40,8 @@ export let autoPlay,
 
 const AUDIO_BUFFER_CACHE = {}
 
-async function loadPreset ({ name, url }) {
+// TODO: can i export this function?
+export async function loadPreset ({ name, url }) {
   if (process.ENV === 'development') {
     console.log(`load preset ${name}`)
   }

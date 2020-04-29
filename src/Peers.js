@@ -2,6 +2,7 @@ import Peer from 'peerjs'
 import { Map } from 'immutable'
 import { randomDigits, resetPreset } from './utils'
 import { settings, presets } from './presets'
+import { PRESETS as sample, loadPreset}  from './index'
 var clientConnections = Map({})
 
 var hostConnection
@@ -34,6 +35,7 @@ peer.on('open', (id) => {
 })
 
 // Runs when another peer connects to this peer
+// FIXME: host is not updating sample
 peer.on('connection', (connection) => {
   console.log(
     `${connection.peer} attempting to establish connection.`
@@ -63,10 +65,12 @@ peer.on('connection', (connection) => {
   })
 
   connection.on('data', (data) => {
-    console.log('Recvied data:\n', data, data.message)
+    console.log('Received data:\n', data)
 
     // host message is set here:
-    settings.endPreset = data.message
+		settings.endPreset = data.message
+
+		loadPreset(data.sample)
 		resetPreset()
     
     broadcast({
@@ -131,9 +135,11 @@ export function join () {
   })
 
   hostConnection.on('data', (data) => {
-    console.log('Recvied data in join func:\n', data)
+    console.log('Received data in join func:\n', data)
 		
-    settings.endPreset = data.message
+		settings.endPreset = data.message
+
+		loadPreset(data.sample)
    	resetPreset()
 		updatePeerList(data.peers)
   })
@@ -144,7 +150,6 @@ export function join () {
     )
 
     peer.destroy()
-
     location.reload()
   })
 }
@@ -170,20 +175,20 @@ export function broadcast(data) {
 export function send () {
   const data = {
     sender: peerId,
-    message: ''
+		message: '', 
+		sample: ''
   }
 
-	// working>
-	// TODO: tell every peer to use the same instrument 
 	makePresetList().forEach(preset => {
 		if (parseInt(preset.peerList) == peerId) {
 			settings.endPreset = preset.preset
 			data.message = settings.endPreset
+			data.sample = preset.sample
 		}
 	})
 
   if (hostConnection) {
-    console.log('SSS' + JSON.stringify(data))
+		console.log('SSS' + JSON.stringify(data))
     hostConnection.send(data)
   }
 
@@ -201,7 +206,7 @@ function makePresetList () {
   let presetPeerList = []
 
   Object.keys(presets).forEach((preset, i) => {
-    presetPeerList.push({ preset: preset, peerList: peerList[i] })
+    presetPeerList.push({ preset: preset, peerList: peerList[i], sample: sample[i] })
   })
 
   return presetPeerList

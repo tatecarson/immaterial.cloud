@@ -62,12 +62,11 @@ gui.add(settings, 'endPreset')
 gui.remember(settings)
 
 // hide for performance
-// gui.hide()
+gui.hide()
 
 export const presets = gui.load.remembered
 
 // interpolate from current position to the endPreset over n steps
-// TODO: make more presets, remove preset1
 export function interpolatePresets (startValue, endPreset, steps) {
   let preset = {}
   let end = presets[endPreset][0]
