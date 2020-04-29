@@ -35,7 +35,6 @@ peer.on('open', (id) => {
 })
 
 // Runs when another peer connects to this peer
-// FIXME: host is not updating sample
 peer.on('connection', (connection) => {
   console.log(
     `${connection.peer} attempting to establish connection.`
@@ -180,7 +179,9 @@ export function send () {
   }
 
 	makePresetList().forEach(preset => {
+		console.log("send -> preset.peerList", parseInt(preset.peerList), peerId)
 		if (parseInt(preset.peerList) == peerId) {
+			console.log('the host got here!')
 			settings.endPreset = preset.preset
 			data.message = settings.endPreset
 			data.sample = preset.sample
@@ -193,7 +194,9 @@ export function send () {
   }
 
   // host send
-  if (!clientConnections.isEmpty()) {
+	if (!clientConnections.isEmpty()) {
+		console.log('host???', data)
+		loadPreset(data.sample)
     broadcast({
       ...data,
       peers: generatePeerList()
@@ -202,11 +205,12 @@ export function send () {
 }
 
 function makePresetList () {
-  let peerList = generatePeerList().length == 1 ? generatePeerList() : generatePeerList().split(',')
+	let peerList = generatePeerList().length == 1 ? generatePeerList() : generatePeerList().split(',')	
   let presetPeerList = []
-
-  Object.keys(presets).forEach((preset, i) => {
-    presetPeerList.push({ preset: preset, peerList: peerList[i], sample: sample[i] })
+	
+	// FIXME: two peers are triggering the same sample
+	Object.keys(presets).forEach((preset, i) => {
+		presetPeerList.push({ preset: preset, peerList: peerList[i], sample: sample[i] })
   })
 
   return presetPeerList

@@ -40,7 +40,6 @@ export let autoPlay,
 
 const AUDIO_BUFFER_CACHE = {}
 
-// TODO: can i export this function?
 export async function loadPreset ({ name, url }) {
   if (process.ENV === 'development') {
     console.log(`load preset ${name}`)
