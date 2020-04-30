@@ -32,8 +32,8 @@ export const PRESETS = [
   }
 ]
 
-const pillPlay = document.getElementById('pill-play'),
-  pillLoading = document.getElementById('pill-loading')
+// pillPlay = document.getElementById('pill-play'),
+const pillLoading = document.getElementById('pill-loading')
 
 export let autoPlay,
   granular
@@ -46,12 +46,7 @@ export async function loadPreset ({ name, url }) {
   }
 
   autoPlay.stop()
-
-  pillPlay.textContent = 'Play'
-
   pillLoading.classList.remove('hidden')
-  pillPlay.classList.add('inactive')
-  // presets.classList.add('inactive')
 
   let data
 
@@ -68,8 +63,6 @@ export async function loadPreset ({ name, url }) {
   AUDIO_BUFFER_CACHE[name] = audioBuffer
 
   pillLoading.classList.add('hidden')
-  pillPlay.classList.remove('inactive')
-  // presets.classList.remove('inactive')
 }
 
 async function init () {
@@ -103,21 +96,6 @@ async function init () {
 
   autoPlay = new AutoPlay(granular)
 
-  pillPlay.addEventListener('click', (event) => {
-    event.preventDefault()
-    event.stopPropagation()
-
-    if (autoPlay.isRunning()) {
-      autoPlay.stop()
-
-      pillPlay.textContent = 'Play'
-    } else {
-      autoPlay.start()
-
-      pillPlay.textContent = 'Stop'
-    }
-  })
-
   window.addEventListener('keydown', (key) => {
     // space
     if (event.keyCode === 32) {
@@ -126,7 +104,6 @@ async function init () {
   })
 	
 	await loadPreset(PRESETS[3])
-	// setInterval(await loadPreset(PRESETS[Math.round(Math.random())], 5000))
 }
 
 init()
