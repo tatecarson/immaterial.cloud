@@ -17,6 +17,7 @@ const peer = new Peer(peerId, {
   secure: true
 })
 document.getElementById('hostIdBtn').addEventListener('click', () => join())
+let globalPeers = []
 
 peer.on('open', (id) => {
   console.log('Connection to signaller establised.')
@@ -134,7 +135,7 @@ export function join () {
   })
 
   hostConnection.on('data', (data) => {
-    console.log('Received data in join func:\n', data)
+		console.log('Received data in join func:\n', data)
 		
 		settings.endPreset = data.message
 
@@ -154,14 +155,16 @@ export function join () {
 }
 
 function updatePeerList(peerList) {
+	globalPeers = peerList || generatePeerList()
+	
   document.getElementById('peerList').innerText = peerList || generatePeerList()
 }
 
-function generatePeerList () {
+function generatePeerList() {
   return clientConnections
     .map((connection) => connection.peer)
     .toList()
-    .push(`${peerId} (HOST)`)
+    .push(`${peerId}`)
     .join(', ')
 }
 
@@ -178,10 +181,8 @@ export function send () {
 		sample: ''
   }
 
-	makePresetList().forEach(preset => {
-		console.log("send -> preset.peerList", parseInt(preset.peerList), peerId)
+	makePresetList(data).forEach(preset => {
 		if (parseInt(preset.peerList) == peerId) {
-			console.log('the host got here!')
 			settings.endPreset = preset.preset
 			data.message = settings.endPreset
 			data.sample = preset.sample
@@ -195,7 +196,7 @@ export function send () {
 
   // host send
 	if (!clientConnections.isEmpty()) {
-		console.log('host???', data)
+		// console.log('host???', data)
 		loadPreset(data.sample)
     broadcast({
       ...data,
@@ -204,15 +205,13 @@ export function send () {
   }
 }
 
-function makePresetList () {
-	let peerList = generatePeerList().length == 1 ? generatePeerList() : generatePeerList().split(',')	
+function makePresetList() {
   let presetPeerList = []
 	
-	// FIXME: two peers are triggering the same sample
 	Object.keys(presets).forEach((preset, i) => {
-		presetPeerList.push({ preset: preset, peerList: peerList[i], sample: sample[i] })
+		presetPeerList.push({ preset: preset, peerList: globalPeers.split(',')[i], sample: sample[i] })
   })
-
-  return presetPeerList
+	
+	return presetPeerList
 }
 
