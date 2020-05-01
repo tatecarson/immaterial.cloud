@@ -13,7 +13,6 @@ import { delay, reverb } from './processing'
 // const vConsole = new VConsole()
 // vConsole.hide()
 
-// TODO: rewrite to remove all the dom stuff from granular demo
 export const PRESETS = [
   {
     name: 1,

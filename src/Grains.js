@@ -1,14 +1,13 @@
 import p5 from 'p5'
 import 'p5/lib/addons/p5.dom'
 import { differenceAccuracy } from './MotionDetection'
-import { map, resetPreset } from './utils'
-import { send } from './Peers'
+import { resetPreset } from './utils'
+import { send, joined } from './Peers'
 
 const ID = 'grains'
 export let isSeen = true; 
 export default class Grains {
-  constructor (granular) {
-    let grains = []
+  constructor () {
     let capture
     let prevFrame
     let blended
@@ -29,12 +28,26 @@ export default class Grains {
     const s = (sketch) => {
       sketch.setup = function () {
         const canvas = sketch.createCanvas(sketch.windowWidth, sketch.windowHeight)
-        canvas.parent('canvases')	
+				canvas.parent('canvases')	
 
 				sketch.textAlign(sketch.CENTER, sketch.CENTER);
 				sketch.textSize(sampleSize);
 
-        capture = sketch.createCapture(sketch.VIDEO)
+				sketch.shuffle(chars, true)
+				// init with random values
+				for (var i = 0; i < sampleSize; i++) {
+					hueValues[i] = sketch.random(360);
+					saturationValues[i] = sketch.random(100);
+					if (i % 15 == 0) {
+						brightnessValues[i] = 0;
+					} else {
+						brightnessValues[i] = 100;
+					}
+					opacityValues[i] = sketch.random(255)
+				}
+
+				// restart the sketch after capture loads
+				capture = sketch.createCapture(sketch.VIDEO)
         capture.size(sketch.displayWidth, sketch.displayHeight)        
         capture.hide()
 
@@ -50,26 +63,11 @@ export default class Grains {
 				
 				sketch.colorMode(sketch.HSB, 360, 100, 100, 100);
 				sketch.noStroke();
-				// change the order of the chars each time
-				sketch.shuffle(chars, true)
-				// init with random values
-				for (var i = 0; i < sampleSize; i++) {
-					hueValues[i] = sketch.random(360);
-					saturationValues[i] = sketch.random(100);
-					if (i % 15 == 0) {
-						brightnessValues[i] = 0;
-					} else {
-						brightnessValues[i] = 100;
-					}
-					opacityValues[i] = sketch.random(255)
-				}
       }
 
       sketch.draw = function () {
-        // sketch.clear()
-
 				sketch.background(0, 0, 100);
-				sketch.scale(1)
+
 				xoff = xoff + 0.1;
 				sampleSize = sketch.floor(sketch.map(sketch.noise(xoff), 0, 1, 5, 35));
 
@@ -82,14 +80,22 @@ export default class Grains {
 						const b = capture.pixels[i + 2];
 						let index = sketch.floor((r + g + b) / maxColor * (chars.length - 1));
 
-						sketch.fill(hueValues[index], saturationValues[index], brightnessValues[index], opacityValues[index]);
-
-						sketch.text(chars[index], x, y);
+						// change colors
+						// check if it has values
+						if (joined) {
+							sketch.fill(hueValues[index], saturationValues[index], brightnessValues[index], opacityValues[index])
+							sketch.text(chars[index], x, y)
+						} else {
+							sketch.fill(360, 100, 100)
+							sketch.text("\\", x, y)
+						}
 					}
 				}
 
-        getMovement(capture, sourceData, prevFrame, blended)
-        checkAreas(blendedData, blended)
+				if (joined) {
+					getMovement(capture, sourceData, prevFrame, blended)
+					checkAreas(blendedData, blended)
+				}
       }
 
       sketch.windowResized = function () {
@@ -133,6 +139,7 @@ export default class Grains {
           send()
 					resetPreset()
 					
+					// change colors 
 					sketch.shuffle(chars, true)
 					// init with random values
 					for (var i = 0; i < sampleSize; i++) {

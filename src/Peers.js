@@ -9,6 +9,9 @@ var hostConnection
 
 const peerId = randomDigits(4)
 
+// to keep p5 from drawing until you join
+export let joined = false
+
 // export const peer = new Peer(peerId)
 const peer = new Peer(peerId, {
   host: 'kfwong-server.herokuapp.com',
@@ -16,7 +19,10 @@ const peer = new Peer(peerId, {
   path: '/myapp',
   secure: true
 })
-document.getElementById('hostIdBtn').addEventListener('click', () => join())
+document.getElementById('hostIdBtn').addEventListener('click', () => {
+	joined = true
+	join()
+})
 let globalPeers = []
 
 peer.on('open', (id) => {
