@@ -10,7 +10,8 @@ import AutoPlay from './AutoPlay'
 import { send } from './Peers'
 import { delay, reverb } from './processing'
 
-const vConsole = new VConsole()
+// const vConsole = new VConsole()
+// vConsole.hide()
 
 // TODO: rewrite to remove all the dom stuff from granular demo
 export const PRESETS = [
