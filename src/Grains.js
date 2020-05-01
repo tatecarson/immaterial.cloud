@@ -92,9 +92,10 @@ export default class Grains {
 						}
 					}
 				}
+				
+				getMovement(capture, sourceData, prevFrame, blended)
 
 				if (joined) {
-					getMovement(capture, sourceData, prevFrame, blended)
 					checkAreas(blendedData, blended)
 				}
       }
