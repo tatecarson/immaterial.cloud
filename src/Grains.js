@@ -15,6 +15,7 @@ export default class Grains {
 		let blendedData
 		
 		const chars = ["\u2581", "\u2582", "\u2592", "\u2591", "\u258f", "\u258e", "\u258d", "\u258c"]
+		
 		let sampleSize = 25;
 		const maxColor = 765;// 255*3
 
@@ -92,9 +93,10 @@ export default class Grains {
 						}
 					}
 				}
-				
+
 				getMovement(capture, sourceData, prevFrame, blended)
 
+				// run once the user has clicked the join button
 				if (joined) {
 					checkAreas(blendedData, blended)
 				}

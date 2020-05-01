@@ -5,6 +5,7 @@
 	<!-- TODO: title -->
 	<title>What is the title?</title>
 	<link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css2?family=Harmattan&display=swap" rel="stylesheet">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="https://unpkg.com/swiper/css/swiper.min.css">
 	<link rel="stylesheet" href="https://unpkg.com/mvp.css">
@@ -18,41 +19,103 @@
 			top: 0;
 		}
 
-
 		html,
 		body {
 			position: relative;
 			padding: 0;
 			height: 100%;
-			background: rgb(202, 202, 255)
+			background: hsl(300, 60%, 75%);
+			font-family: 'Harmattan', sans-serif;
 		}
 
 		.swiper-container {
 			width: 100%;
 			height: 100%;
 		}
+
+		p {
+			font-size: larger;
+		}
+
+		button[class*="btn"] {
+			border-style: outset;
+		}
+
+		h2 {
+			background: hsl(200, 60%, 75%);
+		}
+
+		.grn-btn {
+			background: #40bf80;
+		}
+
+		.red-btn {
+			background: #bf4040;
+		}
+
+		.blu-btn {
+			background: #4095bf;
+		}
+
+		.btn2 {
+			cursor: pointer;
+			text-transform: uppercase;
+			padding: 3px 10px;
+			font-weight: bold;
+			border-radius: 3px;
+			border: 2px solid #0a0a0a;
+			color: #0a0a0a;
+			font-stretch: condensed;
+		}
+
+		.teal {
+			background: #65e2d5;
+		}
+
+		.green {
+			background: #65e282;
+		}
+
+		.yellow-green {
+			background: hsl(142, 60%, 75%);
+		}
+
+		.yellow {
+			background: #e2d565;
+		}
+
+		.peach {
+			background: #e27e65;
+		}
+
+		.purple {
+			background: #6575e2;
+		}
+
+		.fuschia {
+			background: #d165e2;
+		}
+
+		.pink {
+			background: #e2659f;
+		}
 	</style>
 </head>
 
-<!-- TODO: make the interface disappear when it isn't needed so you can see the visuals -->
-<!-- put it in a slideaway thing -->
-
 <body>
-
-
 	<!-- Slider main container -->
 	<div class="swiper-container">
 		<!-- Additional required wrapper -->
 		<div class="swiper-wrapper">
 			<!-- Slides -->
 			<div class="swiper-slide">
-
-
 				<header>
 					<!-- TODO: edit this copy -->
-					<h2>
+					<h1>
+						<!-- &#9601;&#32;&#9602;&#32;&blk12;&#32; -->
 						Vibration Music
-					</h2>
+						<!-- &blk14;&#32;&#9615;&#9614;&#9613;&#9612; -->
+					</h1>
 					<p>
 						This is music you must hear with friends. Point three other phones to this page and enter in the ID of the first phone.
 						Now your phones are all connected and ready to play together.
@@ -70,39 +133,31 @@
 				</section>
 			</div>
 			<div class="swiper-slide">
-
 				<section>
-
-					<h2>
-
-						<code id="selfId">A MOMENT PLEASE...</code>
+					<h2 id="selfId">
+						<code>A MOMENT PLEASE...</code>
 					</h2>
-
-
-
 					<p>
 						<button id="signallerBtn" disabled autocomplete="off" onclick="reconnect()">
 							◌ SEARCHING FOR SIGNALLER...
 						</button>
 					</p>
-
-					<p>
-						<input id="hostIdVal" type="text" placeholder="Host ID to join?" autocomplete="off" />
-						<a href="#" id="hostIdBtn"><b>JOIN</b></a>
-					</p>
-
+					<br><br>
 				</section>
 				<section>
 					<p>
+						<input id="hostIdVal" type="text" placeholder="Host ID to join?" autocomplete="off" />
+						<a href="#" id="hostIdBtn" class="btn2 yellow-green">JOIN</a>
+					</p>
+					<p>
 						connected peers: <code id="peerList" style="">
 					</p>
-					
-					</section>
-					<section>
-						<p>
-							play &rarr;
-						</p>
-					</section>
+				</section>
+				<section>
+					<p >
+						play &rarr;
+					</p>
+				</section>
 			</div>
 			<div class="swiper-slide">
 				<div id="canvases" style="padding: 0px"></div>
@@ -127,6 +182,10 @@
 				el: '.swiper-scrollbar',
 			},
 		})
+
+		setInterval(() => {
+			document.body.style.cssText = `background: hsl(${Math.random() * 360}, ${Math.random() * 100}%, 75%)`
+		}, 5000)
 	</script>
 </body>
 

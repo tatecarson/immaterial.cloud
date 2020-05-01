@@ -65,7 +65,9 @@ export async function loadPreset ({ name, url }) {
   // pillLoading.classList.add('hidden')
 }
 
-async function init () {
+async function init() {
+
+
   const audioContext = p5.prototype.getAudioContext()
 
   granular = new Granular({
