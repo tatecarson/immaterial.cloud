@@ -30,6 +30,7 @@ export default class Grains {
         const canvas = sketch.createCanvas(sketch.windowWidth, sketch.windowHeight)
 				canvas.parent('canvases')	
 
+				sketch.noLoop()
 				sketch.textAlign(sketch.CENTER, sketch.CENTER);
 				sketch.textSize(sampleSize);
 
@@ -47,7 +48,7 @@ export default class Grains {
 				}
 
 				// restart the sketch after capture loads
-				capture = sketch.createCapture(sketch.VIDEO)
+				capture = sketch.createCapture(sketch.VIDEO, () => sketch.loop())
         capture.size(sketch.displayWidth, sketch.displayHeight)        
         capture.hide()
 
