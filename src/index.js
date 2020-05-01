@@ -34,7 +34,7 @@ export const PRESETS = [
 ]
 
 // pillPlay = document.getElementById('pill-play'),
-const pillLoading = document.getElementById('pill-loading')
+// const pillLoading = document.getElementById('pill-loading')
 
 export let autoPlay,
   granular
@@ -47,7 +47,7 @@ export async function loadPreset ({ name, url }) {
   }
 
   autoPlay.stop()
-  pillLoading.classList.remove('hidden')
+  // pillLoading.classList.remove('hidden')
 
   let data
 
@@ -63,7 +63,7 @@ export async function loadPreset ({ name, url }) {
 
   AUDIO_BUFFER_CACHE[name] = audioBuffer
 
-  pillLoading.classList.add('hidden')
+  // pillLoading.classList.add('hidden')
 }
 
 async function init () {
