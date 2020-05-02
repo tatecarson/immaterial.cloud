@@ -2,8 +2,7 @@
 <html>
 
 <head>
-	<!-- TODO: title -->
-	<title>What is the title?</title>
+	<title>Immaterial Cloud</title>
 	<link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
 	<link href="https://fonts.googleapis.com/css2?family=Harmattan&display=swap" rel="stylesheet">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
@@ -24,8 +23,28 @@
 			position: relative;
 			padding: 0;
 			height: 100%;
-			background: hsl(300, 60%, 75%);
+			/* background: hsl(300, 60%, 75%); */
 			font-family: 'Harmattan', sans-serif;
+
+			background: linear-gradient(85deg, #aea6d9, #9886f9, #acf986, #f99a86);
+			background-size: 400% 400%;
+			animation: gradient 15s ease infinite;
+
+
+		}
+
+		@keyframes gradient {
+			0% {
+				background-position: 0% 50%;
+			}
+
+			50% {
+				background-position: 100% 50%;
+			}
+
+			100% {
+				background-position: 0% 50%;
+			}
 		}
 
 		.swiper-container {
@@ -113,7 +132,7 @@
 					<!-- TODO: edit this copy -->
 					<h1>
 						<!-- &#9601;&#32;&#9602;&#32;&blk12;&#32; -->
-						Vibration Music
+						Immaterial Cloud
 						<!-- &blk14;&#32;&#9615;&#9614;&#9613;&#9612; -->
 					</h1>
 					<p>
@@ -183,9 +202,9 @@
 			},
 		})
 
-		setInterval(() => {
-			document.body.style.cssText = `background: hsl(${Math.random() * 360}, ${Math.random() * 100}%, 75%)`
-		}, 5000)
+		// setInterval(() => {
+		// 	document.body.style.cssText = `background: hsl(${Math.random() * 360}, ${Math.random() * 100}%, 75%)`
+		// }, 5000)
 	</script>
 </body>
 
