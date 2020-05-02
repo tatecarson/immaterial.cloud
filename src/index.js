@@ -67,7 +67,7 @@ export async function loadPreset ({ name, url }) {
 
 async function init() {
 
-
+	console.log('testing that things are updating!')
   const audioContext = p5.prototype.getAudioContext()
 
   granular = new Granular({
