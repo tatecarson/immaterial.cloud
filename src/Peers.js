@@ -31,7 +31,7 @@ peer.on('open', (id) => {
 
   document.getElementById(
     'signallerBtn'
-  ).innerText = `✔ CONNECTED TO SIGNALLER`
+  ).innerText = `CONNECTED TO SIGNALLER`
 
   document.getElementById('signallerBtn').disabled = true
 
