@@ -110,7 +110,7 @@ peer.on('disconnected', () => {
 
   document.getElementById(
     'signallerBtn'
-  ).innerText = `✘ DISCONNECTED FROM SIGNALLER. RECONNECT?`
+  ).innerText = `✘ Disconnected from signaler. Click to reconnect?`
 
   document.getElementById('signallerBtn').disabled = false
 })
@@ -119,6 +119,7 @@ peer.on('error', (error) => {
   console.log(error)
 })
 
+// FIXME: this doesn't always work
 export function reconnect () {
   console.log(`Reconnecting to signaller.`)
   document.getElementById('signallerBtn').disabled = true

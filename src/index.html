@@ -128,32 +128,29 @@
 			<!-- Slides -->
 			<div class="swiper-slide">
 				<header>
-					<!-- TODO: edit this copy -->
 					<h1>
-						<!-- &#9601;&#32;&#9602;&#32;&blk12;&#32; -->
-						Immaterial Cloud
-						<!-- &blk14;&#32;&#9615;&#9614;&#9613;&#9612; -->
+						immaterial.cloud
 					</h1>
 					<p>
-						This is music you must hear with friends. Point three other phones to this page and enter in the ID of the first phone.
-						Now your phones are all connected and ready to play together.
+						This music is meant to be heard with two or more friends. Pick one phone to be the host, and connect all phones to the host's ID. Once connected, the phones are ready to play together.
 					</p>
 					<p>
-						Put each phone in a different part of the room to specialize the sound. Hold your hand over each phone to see how it effects the music.
-						If you want you can experiment with putting the phones in boxes to see how they sound. When you raise the lid of the box you will trigger
-						a change in the music.
+						Place each phone in a different part of the room to spatialize the sound.
+						Wave your hand over each phone to see how it affects the music.
 					</p>
 				</header>
+				<!-- make this bigger, or bold -->
 				<section>
-					<p>
+					<h1>
 						join with other phones &rarr;
-					</p>
+					</h1>
 				</section>
-				<section>
-					<p>
-						Deployed with IPFS
-					</p>
-				</section>
+				<!-- move this down -->
+				<footer style="text-align: center;">
+					<i>
+						Deployed on <a href="https://ipfs.io/">IPFS</a>
+					</i>
+				</footer>
 			</div>
 			<div class="swiper-slide">
 				<section>
@@ -169,7 +166,7 @@
 				</section>
 				<section>
 					<p>
-						<input id="hostIdVal" type="text" placeholder="Host ID to join?" autocomplete="off" />
+						<input id="hostIdVal" type="text" placeholder="Enter host ID" autocomplete="off" />
 						<a href="#" id="hostIdBtn" class="btn2 yellow-green">JOIN</a>
 					</p>
 					<p>
@@ -177,11 +174,10 @@
 					</p>
 				</section>
 				<section>
-					<p >
+					<h1>
 						play &rarr;
-					</p>
+					</h1>
 				</section>
-
 			</div>
 			<div class="swiper-slide">
 				<div id="canvases" style="padding: 0px"></div>
@@ -206,10 +202,6 @@
 				el: '.swiper-scrollbar',
 			},
 		})
-
-		// setInterval(() => {
-		// 	document.body.style.cssText = `background: hsl(${Math.random() * 360}, ${Math.random() * 100}%, 75%)`
-		// }, 5000)
 	</script>
 </body>
 
