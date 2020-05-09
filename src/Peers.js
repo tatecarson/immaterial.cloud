@@ -1,6 +1,6 @@
 import Peer from 'peerjs'
 import { Map } from 'immutable'
-import { randomDigits, resetPreset } from './utils'
+import { randomDigits, resetPreset, shuffle } from './utils'
 import { settings, presets } from './presets'
 import { PRESETS as sample, loadPreset}  from './index'
 var clientConnections = Map({})
@@ -38,7 +38,7 @@ peer.on('open', (id) => {
   document.getElementById('selfId').innerText =
     'YOUR ID IS ' + id
 
-  updatePeerList()
+	updatePeerList()	
 })
 
 // Runs when another peer connects to this peer
@@ -215,8 +215,9 @@ export function send () {
 function makePresetList() {
   let presetPeerList = []
 	
+	let randPresets = Object.keys(presets).sort(() => Math.random() - 0.5)
 	Object.keys(presets).forEach((preset, i) => {
-		presetPeerList.push({ preset: preset, peerList: globalPeers.split(',')[i], sample: sample[i] })
+		presetPeerList.push({ preset: randPresets[i], peerList: globalPeers.split(',')[i], sample: sample[i] })
   })
 	
 	return presetPeerList

@@ -15,6 +15,10 @@ export function map(value, inMin, inMax, outMin, outMax) {
   return (value - inMin) * (outMax - outMin) / (inMax - inMin) + outMin
 }
 
+export function shuffle(obj) {
+	Object.keys(obj).sort(() => Math.random() - 0.5)
+}
+
 // from total-serialism:
 // https://github.com/tmhglnd/total-serialism/blob/798e2bf3492cdee4e2ab2737099b527aaab0296d/src/gen-basic.js#L87
 // changed to allow hi to lo arrays
